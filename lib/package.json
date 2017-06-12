@@ -1,0 +1,26 @@
+{
+  "name": "TenderTummies",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Eliza Meeks",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-materialize": "^0.2.2",
+    "angular-route": "^1.6.4",
+    "firebase": "^4.1.1",
+    "jquery": "^3.2.1",
+    "matchdep": "^1.0.1",
+    "materialize-css": "^0.98.2"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-nodeunit": "^1.0.0",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-sass": "^2.0.0"
+  }
+}
