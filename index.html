@@ -2,13 +2,21 @@
 <html>
 <head>
 	<title>Tender Tummies</title>
-	<link rel="stylesheet" type="text/css" href="lib/node_modules/materialize-css/materialize.min.css">
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="lib/node_modules/materialize-css/dist/css/materialize.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
-<body ng-app="TenderTummies">
 
-<div ng-include="'partials/navbar.html'"></div>
-<div ng-view></div>
+<body ng-app="TenderTummies">
+	<header>
+		<div ng-include="'partials/navbar.html'"></div>
+	</header>
+	<main>
+		<div ng-view></div>
+	</main>
+	<footer>
+		copyright stuff
+	</footer>
 
 <!-- 3rd Party JS -->
 <script type="text/javascript" src="lib/node_modules/jquery/dist/jquery.min.js"></script>
