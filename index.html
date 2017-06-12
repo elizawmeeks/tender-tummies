@@ -2,10 +2,24 @@
 <html>
 <head>
 	<title>Tender Tummies</title>
-	
+	<link rel="stylesheet" type="text/css" href="lib/node_modules/materialize-css/materialize.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
-<body>
+<body ng-app="TenderTummies">
 
+<div ng-include="'partials/navbar.html'"></div>
+<div ng-view></div>
+
+<!-- 3rd Party JS -->
+<script type="text/javascript" src="lib/node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="lib/node_modules/angular/angular.min.js"></script>
+<script type="text/javascript" src="lib/node_modules/angular-route/angular-route.min.js"></script>
+<script type="text/javascript" src="lib/node_modules/materialize-css/dist/js/materialize.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-materialize/0.2.2/angular-materialize.min.js"></script>
+<script type="text/javascript" src="lib/node_modules/firebase/firebase.js"></script>
+
+<!-- mine mine mine -->
+<script type="text/javascript" src="dist/app.js"></script>
 
 </body>
 </html>
