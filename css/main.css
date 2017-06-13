@@ -12,6 +12,9 @@
   height: 75px;
   margin: 25px 0 0 50px; }
 
+.modal-content .row {
+  margin: 0; }
+
 body {
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
   min-height: 100vh;
