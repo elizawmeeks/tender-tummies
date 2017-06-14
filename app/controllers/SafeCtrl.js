@@ -12,9 +12,21 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		nutrients: ""
 	};
 
+	SafeFactory.getSafes(childId)
+	.then( response => {
+		console.log("response", response);
+		$scope.safeList = response;
+		let nutrition = [];
+		response.forEach( key => {
+
+		});
+	});
+
 	$scope.addSafe = () => {
-		console.log("addSafe clicked");
-		// SafeFactory.addSafe();
+		SafeFactory.addSafe($scope.safe)
+		.then( response => {
+			console.log("response", response);
+		});
 	};
     
 });

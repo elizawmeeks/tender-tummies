@@ -85,21 +85,20 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 	$rootScope.currentChildId = "";
 	$rootScope.view = "Tender Tummies";
 
-	$scope.openModal = () => {
-		console.log("modal opened");
-		$("input.data-list-input").focus();
-	};
-
-	$("#addChildModal").on(".open", function(){
-		$("input.data-list-input").focus();
-	});
-
-	// $('select.data-list-input').focus(function() {
-	// 	$('input.data-list-input').focus();
+	// Stuff for Input area for genders, get back to later
+	// $("#addChildModal").on("click.open", function(){
+	// 	console.log('modal opened');
+	// 	// console.log($("input.data-list-input"));
+	// 	$("input.data-list-input").focus();
 	// });
- //  //when selecting from the select box, put the value in the input box
+
+	// // $('select.data-list-input').focus(function() {
+	// // 	$('input.data-list-input').focus();
+	// // });
+ // //  //when selecting from the select box, put the value in the input box
 	// $('select.data-list-input').change(function() {
-	// 	$('input.data-list-input').val($(this).val());
+	// 	// $('input.data-list-input').val("");
+	// 	console.log("select changed");
 	// });
  //  //When editing the input box, reset the select box setting to "free
  //  //form input". This is important to do so that you can reselect the
@@ -198,9 +197,21 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		nutrients: ""
 	};
 
+	SafeFactory.getSafes(childId)
+	.then( response => {
+		console.log("response", response);
+		$scope.safeList = response;
+		let nutrition = [];
+		response.forEach( key => {
+
+		});
+	});
+
 	$scope.addSafe = () => {
-		console.log("addSafe clicked");
-		// SafeFactory.addSafe();
+		SafeFactory.addSafe($scope.safe)
+		.then( response => {
+			console.log("response", response);
+		});
 	};
     
 });
@@ -237,12 +248,6 @@ app.controller("TriggerCtrl", function($scope){
 
 app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 
-	let currentChild = null;
-
-	let getChildId = () => {
-		return currentChild;
-	};
-
 	const addChild = ( childObj ) => {
 		return $q( (resolve, reject) => {
 			let object = JSON.stringify(childObj);
@@ -278,7 +283,6 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 			.then( childObj => {
 				let child = childObj.data;
 				child.id = childId;
-				currentChild = childId;
 				resolve(child);
 			})
 			.catch( error => {
@@ -317,7 +321,6 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		getChild,
 		getChildren,
 		editChild,
-		getChildId,
 		deleteChild
 	};
     
@@ -352,6 +355,36 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     			reject(error);
     		});
     	});
+    };
+
+    const getSafes = ( childId ) => {
+    	return $q( (resolve, reject) => {
+    		$http.get(`${fbcreds.databaseURL}/safe.json?orderBy="cid"&equalTo="${childId}"`)
+    		.then( response => {
+    			console.log("response", response);
+    			let safes = response.data;
+    			// let sortKeys = (item) => {
+    			// 	Object.keys(item).forEach( key => {
+    			// 		item[key].id = key;
+    			// 	});
+    			// 	return item;
+    			// };
+    			// let safeArray = safes.map(sortKeys);
+    			// console.log("safeArray", safeArray);
+    			Object.keys(safes).forEach( key => {
+    				safes[key].id = key;
+    			});
+    			resolve(safes);
+    		})
+    		.catch( error => {
+    			reject(error);
+    		});
+    	});
+    };
+
+    return {
+    	addSafe,
+    	getSafes
     };
 
 });

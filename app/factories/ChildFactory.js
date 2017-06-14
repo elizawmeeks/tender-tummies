@@ -2,12 +2,6 @@
 
 app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 
-	let currentChild = null;
-
-	let getChildId = () => {
-		return currentChild;
-	};
-
 	const addChild = ( childObj ) => {
 		return $q( (resolve, reject) => {
 			let object = JSON.stringify(childObj);
@@ -43,7 +37,6 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 			.then( childObj => {
 				let child = childObj.data;
 				child.id = childId;
-				currentChild = childId;
 				resolve(child);
 			})
 			.catch( error => {
@@ -82,7 +75,6 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		getChild,
 		getChildren,
 		editChild,
-		getChildId,
 		deleteChild
 	};
     

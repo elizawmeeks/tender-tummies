@@ -38,6 +38,7 @@ input.data-list-input[type=text]:focus:not([readonly]) {
   box-shadow: 0 0 0; }
 
 body {
+  background-color: #91d8d3;
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
   min-height: 100vh;
   color: #003366; }
@@ -54,3 +55,9 @@ header, footer, main {
   background-color: #F8FF91;
   height: 25px;
   width: calc(100vw - 300px); }
+
+.textColor {
+  color: #003366; }
+
+.tallModal {
+  min-height: 400px; }

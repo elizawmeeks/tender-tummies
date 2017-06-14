@@ -1,0 +1,51 @@
+<!-- Add Child Modal Trigger -->
+<div class="container">
+  <div class="row">
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addChildModal' modal>Add Safe</a>
+    </div>
+    <div class="col m8">
+      <div input-field>
+        <select class="" material-select watch>
+          <option ng-repeat="value in item.nutrition">{{value}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+<!-- Safes list -->
+  <div class="row" ng-repeat="item in safeList">
+    <div class="col m12">
+      <h2>{{item.food}}</h2>
+    </div>
+  </div>
+</div>
+
+
+<!-- Add Child Modal -->
+<div id="addChildModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>Add Safe</h4>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="safe.food" placeholder="milk">
+        <label>Food</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field>
+        <select class="" ng-model="safe.nutrients" material-select multiple watch>
+          <option value="milk">Milk</option>
+          <option value="dairy">Dairy</option>
+          <option value="protein">Protein</option>
+          <option value="fruit">Fruit</option>
+          <option value="vegetable">Vegetable</option>
+          <option value="grain">grain</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addSafe()">Add Safe</a>
+  </div>
+</div>

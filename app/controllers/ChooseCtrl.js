@@ -15,21 +15,20 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 	$rootScope.currentChildId = "";
 	$rootScope.view = "Tender Tummies";
 
-	$scope.openModal = () => {
-		console.log("modal opened");
-		$("input.data-list-input").focus();
-	};
-
-	$("#addChildModal").on(".open", function(){
-		$("input.data-list-input").focus();
-	});
-
-	// $('select.data-list-input').focus(function() {
-	// 	$('input.data-list-input').focus();
+	// Stuff for Input area for genders, get back to later
+	// $("#addChildModal").on("click.open", function(){
+	// 	console.log('modal opened');
+	// 	// console.log($("input.data-list-input"));
+	// 	$("input.data-list-input").focus();
 	// });
- //  //when selecting from the select box, put the value in the input box
+
+	// // $('select.data-list-input').focus(function() {
+	// // 	$('input.data-list-input').focus();
+	// // });
+ // //  //when selecting from the select box, put the value in the input box
 	// $('select.data-list-input').change(function() {
-	// 	$('input.data-list-input').val($(this).val());
+	// 	// $('input.data-list-input').val("");
+	// 	console.log("select changed");
 	// });
  //  //When editing the input box, reset the select box setting to "free
  //  //form input". This is important to do so that you can reselect the
