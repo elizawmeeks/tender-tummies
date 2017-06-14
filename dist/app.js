@@ -189,6 +189,9 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
+	// Sets nav title
+	$rootScope.view = "Safes";
+
 	// Structure of the safe food object, used in both adding and editing safes.
 	$scope.safe = {
 		food: "",
@@ -278,21 +281,66 @@ app.controller("TrialDetailCtrl", function($scope){
 
 "use strict";
 
-app.controller("TriggerCtrl", function($scope, TriggerFactory){
+app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
+
+	// Sets current child id into an easier to use, local, variable.
+	let childId = $rootScope.currentChildId;
+
+	$rootScope.view = "Triggers";
 
   $scope.trigger = {
   	food: "",
+  	cid: childId,
   	chronic: [],
   	acute: [],
   	severity: "",
   	nutrition: ""
   };
 
+  // Add trigger from the trigger modal
   $scope.addTrigger = () => {
   	console.log("$scope.trigger", $scope.trigger);
-  	// TriggerFactory.addTrigger( $scope.trigger );
-  	// .then $scope.getTriggers
+  	TriggerFactory.addTrigger( $scope.trigger )
+  	.then ( response => {
+  		$scope.getTriggers();
+  	});
   };
+
+  // Pulls all triggers and sets them as $scope.triggerList
+  $scope.getTriggers = () => {
+  	TriggerFactory.getTriggers(childId)
+  	.then( response => {
+  		console.log(response);
+  		$scope.triggerList = response;
+  	});
+  };
+
+  // Pulls one triggers and sets them as $scope.currentTrigger
+  $scope.getTrigger = (triggerId) => {
+  	TriggerFactory.getTrigger(triggerId)
+  	.then( response => {
+  		$scope.currentTrigger = response;
+  		// console.log("$scope.currentTrigger", $scope.currentTrigger);
+  	});
+  };
+
+  // Edits trigger object from the modal window
+  $scope.editTrigger = (triggerId, triggerObj) => {
+  	TriggerFactory.editTrigger(triggerId, triggerObj)
+  	.then( response => {
+  		$scope.getTriggers();
+  	});
+  };
+
+  // Deletes trigger. GROW OUT OF THAT FPIES, BABY!
+	$scope.deleteTrigger = (triggerId) => {
+		TriggerFactory.deleteTrigger(triggerId)
+		.then( () => {
+			$scope.getTriggers();
+		});
+	};
+
+  $scope.getTriggers();
 
 });
 
@@ -501,8 +549,72 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
   	});
   };
 
+  // Gets all triggers associated with the child
+  const getTriggers = ( childId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/trigger.json?orderBy="cid"&equalTo="${childId}"`)
+  		.then( response => {
+  			console.log("response", response);
+  			let triggers = response.data;
+  			Object.keys(triggers).forEach( key => {
+  				triggers[key].id = key;
+  			});
+  			resolve(triggers);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Get one trigger to populate edit modal and delete modal
+  const getTrigger = ( triggerId ) => {
+  	return $q((resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/trigger/${triggerId}.json`)
+          .then((response) => {
+          	let trigger = response.data;
+          	trigger.id = triggerId;
+              resolve(trigger);
+          })
+          .catch((error) => {
+              reject(error);
+          });
+    });
+  };
+
+  // Edit trigger object
+  const editTrigger = ( triggerID, triggerObj ) => {
+    	let changedObj = JSON.stringify(triggerObj);
+    	return $q( (resolve, reject) => {
+    		$http.patch(`${fbcreds.databaseURL}/trigger/${triggerID}.json`, changedObj)
+	    	.then( response => {
+	    		resolve(response);
+	    	})
+	    	.catch( error => {
+	    		reject(error);
+	    	});
+    	});
+    };
+
+  // Delete trigger from database. Maybe they passed a failed food! Hooray! Grow out of that FPIES, baby!
+  const deleteTrigger = ( triggerId ) => {
+		return $q( (resolve, reject) => {
+			$http.delete(`${fbcreds.databaseURL}/trigger/${triggerId}.json`)
+			.then( response => {
+				resolve(response);
+			})
+			.catch( error => {
+				reject(error);
+			});
+		});
+	};
+
   return {
-  	addTrigger
+  	addTrigger,
+  	getTriggers,
+  	getTrigger,
+  	editTrigger,
+  	deleteTrigger
   };
     
 });
