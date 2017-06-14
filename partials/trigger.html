@@ -131,7 +131,18 @@
 <div id="triggerDetailModal" class="modal tallModal">
   <div class="modal-content">
     <h4>{{currentTrigger.food}}</h4>
-    <p></p>
+    <div>
+      <h5>Acute Symptoms:</h5>
+      <span ng-repeat="item in currentTrigger.acute">{{item}}{{$last ? '' : ', '}}</span >
+    </div>
+    <div>
+      <h5>Chronic Symptoms:</h5>
+      <span ng-repeat="item in currentTrigger.chronic">{{item}}{{$last ? '' : ', '}}</span >
+    </div>
+    <div>
+      <h5>Associated Reactions:</h5>
+      <span>Reaction List here</span >
+    </div>
   </div>
   <div class="modal-footer">
     <a href="#!/trigger" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>

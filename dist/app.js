@@ -320,7 +320,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
   	TriggerFactory.getTrigger(triggerId)
   	.then( response => {
   		$scope.currentTrigger = response;
-  		console.log("$scope.currentTrigger", $scope.currentTrigger);
+  		// console.log("$scope.currentTrigger", $scope.currentTrigger);
   	});
   };
 
