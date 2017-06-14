@@ -2,6 +2,8 @@
   background-color: transparent; }
   .side-nav h1 {
     margin: 0 0 10px; }
+  .side-nav li a {
+    color: #003366; }
 
 .navLine {
   background-color: #F8FF91;
@@ -15,10 +17,35 @@
 .modal-content .row {
   margin: 0; }
 
+div.data-list-input {
+  position: relative; }
+
+select.data-list-input {
+  position: absolute;
+  top: 5px;
+  left: 0px; }
+
+#data-list-input {
+  position: absolute;
+  top: 0px;
+  left: 0px; }
+
+input.data-list-input {
+  border-bottom: none; }
+
+input.data-list-input[type=text]:focus:not([readonly]) {
+  border-bottom: none;
+  box-shadow: 0 0 0; }
+
 body {
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
   min-height: 100vh;
   color: #003366; }
+
+.footer-copyright {
+  position: fixed;
+  bottom: 0;
+  right: 5px; }
 
 header, footer, main {
   padding-left: 300px; }

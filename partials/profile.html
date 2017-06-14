@@ -1,42 +1,91 @@
-<div class="col">
-  <a class='waves-effect waves-light btn' data-target='addChildModal' modal>Add Child</a>
+<!-- Profile -->
+<div class="container">
+	<div class="row">
+		<div class="col m12">
+			<h2>{{child.name}}</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col m12">
+			<h2>{{child.age}} year old {{child.gender}}</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col m12">
+			<h2>{{child.wtNumber}} {{child.wtUnit}}</h2>
+		</div>
+	</div>
+
+<!-- Edit/Delete Child Buttons -->
+	<div class="row">
+		<div class="col m4">
+		  <a class='waves-effect waves-teal btn-flat' data-target='editChildModal' modal><i class="material-icons left">mode_edit</i></a>
+		</div>
+		<div class="col m4">
+		  <a class='waves-effect waves-teal btn-flat' data-target='deleteChildModal' modal><i class="material-icons left">delete</i></a>
+		</div>
+	</div>
 </div>
 
-<div id="addChildModal" class="modal">
+
+<!-- edit Child Modal -->
+<div id="editChildModal" class="modal">
   <div class="modal-content">
-    <h4>Add Child</h4>
+    <h4>Edit Child</h4>
     <div class="row">
       <div input-field class="col s12">
-        <input id="name" type="text">
-        <label for="name">Name</label>
+        <input type="text" ng-model="child.name">
+        <label>Name</label>
       </div>
     </div>
     <div class="row">
       <div input-field class="col s12">
-        <input id="age" type="text">
-        <label for="age">Age</label>
+        <input type="text" ng-model="child.age">
+        <label>Age</label>
       </div>
     </div>
     <div class="row">
-      <div input-field class="col s12">
-        <input id="weight" type="text">
-        <label for="weight">Weight</label>
+      <div input-field class="col s6">
+        <input type="text" ng-model="child.wtNumber">
+        <label>Weight</label>
       </div>
+      <div input-field class="col s6">
+		    <select class="" ng-model="child.wtUnit" material-select watch>
+		      <option value="" disabled>Choose your option</option>
+		      <option value="lbs">lbs</option>
+		      <option value="kg">kg</option>
+		    </select>
+			</div>
     </div>
 	  <div class="row">
 		  <div input-field class="col s12">
-		    <select class="" material-select watch>
-		      <option value="" disabled selected>Choose your option</option>
-		      <option value="1">Boy</option>
-		      <option value="2">Girl</option>
-		      <option value="3">Other</option>
-		      <option value="3">Prefer Not to Answer</option>
+		    <select class="" ng-model="child.gender" material-select watch>
+		      <option value="" disabled>Choose your option</option>
+		      <option value="boy">Boy</option>
+		      <option value="girl">Girl</option>
+		      <option value="other"><input type="text"></option>
+		      <option value="">Prefer Not to Answer</option>
 		    </select>
 		    <label>Gender</label>
 			</div>
 		</div>
   </div>
   <div class="modal-footer">
-    <a href="#!/profile" class="modal-action modal-close waves-effect waves-green btn-flat">Add Child</a>
+    <a href="#!/profile/{{child.id}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editChild()">Edit Child</a>
+  </div>
+</div>
+
+
+<!-- Delete Child Modal -->
+<div id="deleteChildModal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <div input-field class="col s12">
+        <p>Are you sure you want to delete {{child.name}}?</p>
+      </div>
+		</div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteChild()">Delete {{child.name}}</a>
   </div>
 </div>
