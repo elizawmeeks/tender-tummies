@@ -6,6 +6,21 @@
     </div>
   </div>
 
+<!-- Trigger List, including modal triggers for edit, delete, and detail -->
+<div class="row" ng-repeat="item in triggerList">
+    <div class="col m2">
+      <a class="waves-effect waves-teal btn-flat"  data-target='editTriggerModal' ng-click="getTrigger( item.id )" modal><i class="material-icons">mode_edit</i></a>
+    </div>
+    <div class="col m2">
+      <a class="waves-effect waves-teal btn-flat"  data-target='deleteTriggerModal' ng-click="getTrigger( item.id )" modal><i class="material-icons">delete</i></a>
+    </div>
+    <div class="col m8">
+      <a data-target="triggerDetailModal" ng-click="getTrigger( item.id )" modal><h2>{{item.food}}</h2></a>
+    </div>
+  </div>
+</div>
+
+
 <!-- Add Trigger Modal -->
 <div id="addTriggerModal" class="modal tallModal">
   <div class="modal-content">
@@ -56,5 +71,83 @@
   </div>
   <div class="modal-footer">
     <a href="#!/trigger" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addTrigger()">Add Trigger</a>
+  </div>
+</div>
+
+<!-- Edit Trigger Modal -->
+<div id="editTriggerModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>Edit Trigger</h4>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="currentTrigger.food" placeholder="Milk">
+        <label>Food</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <select class="" ng-model="currentTrigger.severity" material-select watch>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <label>Severity</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <select class="" ng-model="currentTrigger.chronic" material-select multiple watch>
+          <option value="Vomiting">Vomiting</option>
+          <option value="Diarrhea">Diarrhea</option>
+          <option value="Lethargy">Lethargy</option>
+          <option value="Pallor">Pallor</option>
+          <option value="Abdominal Distension">Abdominal Distension</option>
+        </select>
+        <label>Chronic Symptoms</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <select class="" ng-model="currentTrigger.acute" material-select multiple watch>
+          <option value="Vomiting">Vomiting</option>
+          <option value="Diarrhea">Diarrhea</option>
+          <option value="Lethargy">Lethargy</option>
+          <option value="Pallor">Pallor</option>
+          <option value="Abdominal Distension">Abdominal Distension</option>
+          <option value="Low Blood Pressure">Low Blood Pressure</option>
+          <option value="Low Body Temperature">Low Body Temperature</option>
+          <option value="Shock">Shock</option>
+        </select>
+        <label>Acute Symptoms</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/trigger" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editTrigger(currentTrigger.id, currentTrigger)">Edit Trigger</a>
+  </div>
+</div>
+
+<!-- Trigger Detail Modal -->
+<div id="triggerDetailModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>{{currentTrigger.food}}</h4>
+    <p></p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/trigger" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+  </div>
+</div>
+
+<!-- Delete Trigger Modal -->
+<div id="deleteTriggerModal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <div input-field class="col s12">
+        <p>Are you sure you want to delete {{currentTrigger.food}}?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/trigger" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteTrigger(currentTrigger.id)">Delete {{currentTrigger.food}}</a>
   </div>
 </div>

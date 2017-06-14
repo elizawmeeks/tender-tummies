@@ -4,6 +4,9 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
+	// Sets nav title
+	$rootScope.view = "Safes";
+
 	// Structure of the safe food object, used in both adding and editing safes.
 	$scope.safe = {
 		food: "",
