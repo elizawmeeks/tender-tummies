@@ -1,0 +1,60 @@
+<!-- Add Trigger Modal Trigger -->
+<div class="container">
+  <div class="row">
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTriggerModal' modal>Add Trigger</a>
+    </div>
+  </div>
+
+<!-- Add Trigger Modal -->
+<div id="addTriggerModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>Add Trigger</h4>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="trigger.food" placeholder="Milk">
+        <label>Food</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <select class="" ng-model="trigger.severity" material-select watch>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <label>Severity</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <select class="" ng-model="trigger.chronic" material-select multiple watch>
+          <option value="Vomiting">Vomiting</option>
+          <option value="Diarrhea">Diarrhea</option>
+          <option value="Lethargy">Lethargy</option>
+          <option value="Pallor">Pallor</option>
+          <option value="Abdominal Distension">Abdominal Distension</option>
+        </select>
+        <label>Chronic Symptoms</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <select class="" ng-model="trigger.acute" material-select multiple watch>
+          <option value="Vomiting">Vomiting</option>
+          <option value="Diarrhea">Diarrhea</option>
+          <option value="Lethargy">Lethargy</option>
+          <option value="Pallor">Pallor</option>
+          <option value="Abdominal Distension">Abdominal Distension</option>
+          <option value="Low Blood Pressure">Low Blood Pressure</option>
+          <option value="Low Body Temperature">Low Body Temperature</option>
+          <option value="Shock">Shock</option>
+        </select>
+        <label>Acute Symptoms</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/trigger" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addTrigger()">Add Trigger</a>
+  </div>
+</div>

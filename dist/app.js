@@ -186,34 +186,73 @@ app.controller("RxnDetailCtrl", function($scope){
 "use strict";
 
 app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
-
+	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
-	console.log("childId", childId);
-
+	// Structure of the safe food object, used in both adding and editing safes.
 	$scope.safe = {
 		food: "",
 		cid: childId,
 		nutrients: ""
 	};
 
-	SafeFactory.getSafes(childId)
-	.then( response => {
-		console.log("response", response);
-		$scope.safeList = response;
-		let nutrition = [];
-		response.forEach( key => {
-
+	// Get safes, loads page.
+	$scope.getSafes = () => {
+		SafeFactory.getSafes(childId)
+		.then( response => {
+			console.log("response", response);
+			$scope.safeList = response;
+			let nutritionArray = [];
+			// Putting all of the nutrition arrays into one, nested array.
+			for (let element in response){
+				nutritionArray.push(response[element].nutrients);
+			}
+			// Making the nested nutrition array flat.
+			let flattened = nutritionArray.reduce( (a, b) => {
+				return a.concat(b);
+			});
+			// Getting rid of duplicate nutrients in nutrition array. I can now use $scope.reduced to populate my select menu.
+			$scope.reduced = Array.from(new Set (flattened));
+			
 		});
-	});
+	};
 
+	// Adds a safe to the child's profile.
 	$scope.addSafe = () => {
 		SafeFactory.addSafe($scope.safe)
 		.then( response => {
-			console.log("response", response);
+			$scope.getSafes();
 		});
 	};
-    
+
+	// Edits safe
+	$scope.editSafe = (editId, editObj) => {
+		SafeFactory.editSafe(editId, editObj)
+		.then( response => {
+			$scope.getSafes();
+		});
+	};
+
+	// Gets one safe to populate the edit safe modal.
+	$scope.getSafe = (safeId, safeObj) => {
+    SafeFactory.getSafe(safeId)
+    .then( response => {
+    	console.log("response", response);
+    	$scope.currentSafe = response;
+    	console.log("$scope.currentSafe", $scope.currentSafe);
+    });
+	};
+
+	// Deletes safe. Hopefully it's because the user made a mistake, not because the kid lost a safe food. :(
+	$scope.deleteSafe = (safeId) => {
+		SafeFactory.deleteSafe(safeId)
+		.then( () => {
+			$scope.getSafes();
+		});
+	};
+
+	// Run get safes initially to load the page.
+	$scope.getSafes();
 });
 
 "use strict";
@@ -239,9 +278,22 @@ app.controller("TrialDetailCtrl", function($scope){
 
 "use strict";
 
-app.controller("TriggerCtrl", function($scope){
+app.controller("TriggerCtrl", function($scope, TriggerFactory){
 
-    
+  $scope.trigger = {
+  	food: "",
+  	chronic: [],
+  	acute: [],
+  	severity: "",
+  	nutrition: ""
+  };
+
+  $scope.addTrigger = () => {
+  	console.log("$scope.trigger", $scope.trigger);
+  	// TriggerFactory.addTrigger( $scope.trigger );
+  	// .then $scope.getTriggers
+  };
+
 });
 
 "use strict";
@@ -343,7 +395,7 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
 "use strict";
 
 app.factory("SafeFactory", function($q, $http, fbcreds){
-    
+    // Adds safe to database
     const addSafe = ( object ) => {
     	return $q( (resolve, reject) => {
     		let safeObj = JSON.stringify(object);
@@ -357,20 +409,13 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     	});
     };
 
+    // Gets all safes associated with the child
     const getSafes = ( childId ) => {
     	return $q( (resolve, reject) => {
     		$http.get(`${fbcreds.databaseURL}/safe.json?orderBy="cid"&equalTo="${childId}"`)
     		.then( response => {
     			console.log("response", response);
     			let safes = response.data;
-    			// let sortKeys = (item) => {
-    			// 	Object.keys(item).forEach( key => {
-    			// 		item[key].id = key;
-    			// 	});
-    			// 	return item;
-    			// };
-    			// let safeArray = safes.map(sortKeys);
-    			// console.log("safeArray", safeArray);
     			Object.keys(safes).forEach( key => {
     				safes[key].id = key;
     			});
@@ -382,9 +427,54 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     	});
     };
 
+    // Returns one safe
+    const getSafe = (safeId) => {
+        return $q((resolve, reject) => {
+            $http.get(`${fbcreds.databaseURL}/safe/${safeId}.json`)
+                .then((response) => {
+                	let safe = response.data;
+                	safe.id = safeId;
+                    resolve(safe);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        });
+    };
+
+    // Edits a safe food object
+    const editSafe = ( safeID, safeObj ) => {
+    	let changedObj = JSON.stringify(safeObj);
+    	return $q( (resolve, reject) => {
+    		$http.patch(`${fbcreds.databaseURL}/safe/${safeID}.json`, changedObj)
+	    	.then( response => {
+	    		resolve(response);
+	    	})
+	    	.catch( error => {
+	    		reject(error);
+	    	});
+    	});
+    };
+
+    // Deletes a safe food object from the database
+    const deleteSafe = ( safeId ) => {
+		return $q( (resolve, reject) => {
+			$http.delete(`${fbcreds.databaseURL}/safe/${safeId}.json`)
+			.then( response => {
+				resolve(response);
+			})
+			.catch( error => {
+				reject(error);
+			});
+		});
+	};
+
     return {
     	addSafe,
-    	getSafes
+    	getSafes,
+    	editSafe,
+    	getSafe,
+    	deleteSafe
     };
 
 });
@@ -396,6 +486,24 @@ app.factory("TrialFactory", function($q, $http, fbcreds){
 "use strict";
 
 app.factory("TriggerFactory", function($q, $http, fbcreds){
+
+	// Adds trigger to database
+  const addTrigger = ( object ) => {
+  	return $q( (resolve, reject) => {
+  		let triggerObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/trigger.json`, triggerObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  return {
+  	addTrigger
+  };
     
 });
 "use strict";

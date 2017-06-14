@@ -1,4 +1,4 @@
-<!-- Add Child Modal Trigger -->
+<!-- Add Safe Modal Trigger -->
 <div class="container">
   <div class="row">
     <div class="col m4">
@@ -6,8 +6,9 @@
     </div>
     <div class="col m8">
       <div input-field>
-        <select class="" material-select watch>
-          <option ng-repeat="value in item.nutrition">{{value}}</option>
+        <select class="" ng-model="selectedValue" material-select watch>
+          <option>All</option>
+          <option ng-repeat="value in reduced" value={{value}}>{{value}}</option>
         </select>
       </div>
     </div>
@@ -15,14 +16,20 @@
 
 <!-- Safes list -->
   <div class="row" ng-repeat="item in safeList">
-    <div class="col m12">
+    <div class="col m2">
+      <a class="waves-effect waves-teal btn-flat"  data-target='editChildModal' ng-click="getSafe( item.id )" modal><i class="material-icons">mode_edit</i></a>
+    </div>
+    <div class="col m2">
+      <a class="waves-effect waves-teal btn-flat"  data-target='deleteSafeModal' ng-click="getSafe( item.id )" modal><i class="material-icons">delete</i></a>
+    </div>
+    <div class="col m8">
       <h2>{{item.food}}</h2>
     </div>
   </div>
 </div>
 
 
-<!-- Add Child Modal -->
+<!-- Add Safe Modal -->
 <div id="addChildModal" class="modal tallModal">
   <div class="modal-content">
     <h4>Add Safe</h4>
@@ -35,17 +42,60 @@
     <div class="row">
       <div input-field>
         <select class="" ng-model="safe.nutrients" material-select multiple watch>
-          <option value="milk">Milk</option>
-          <option value="dairy">Dairy</option>
-          <option value="protein">Protein</option>
-          <option value="fruit">Fruit</option>
-          <option value="vegetable">Vegetable</option>
-          <option value="grain">grain</option>
+          <option value="Milk">Milk</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Protein">Protein</option>
+          <option value="Fruit">Fruit</option>
+          <option value="Vegetable">Vegetable</option>
+          <option value="Grain">Grain</option>
         </select>
       </div>
     </div>
   </div>
   <div class="modal-footer">
     <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addSafe()">Add Safe</a>
+  </div>
+</div>
+
+
+<!-- Edit Safe Modal -->
+<div id="editChildModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>Edit Safe</h4>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="currentSafe.food">
+        <label>Food</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field>
+        <select class="" ng-model="currentSafe.nutrients" material-select multiple watch>
+          <option value="Milk">Milk</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Protein">Protein</option>
+          <option value="Fruit">Fruit</option>
+          <option value="Vegetable">Vegetable</option>
+          <option value="Grain">Grain</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editSafe(currentSafe.id, currentSafe)">Edit Safe</a>
+  </div>
+</div>
+
+<!-- Delete Safe Modal -->
+<div id="deleteSafeModal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <div input-field class="col s12">
+        <p>Are you sure you want to delete {{currentSafe.food}}?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteSafe(currentSafe.id)">Delete {{currentSafe.food}}</a>
   </div>
 </div>
