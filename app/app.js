@@ -5,14 +5,14 @@ const app = angular.module("TenderTummies", ["ngRoute", 'ui.materialize']);
 app.config( $routeProvider => {
 	$routeProvider
 	.when("/", {
-		templateUrl: "partials/splash.html",
-		controller: "SplashCtrl"
+		templateUrl: "partials/chooseChild.html",
+		controller: "ChooseCtrl"
 	})
 	.when("/splash", {
         templateUrl: "partials/splash.html",
         controller: "SplashCtrl"
     })
-    .when("/profile", {
+    .when("/profile/:profileId", {
         templateUrl: "partials/profile.html",
         controller: "ProfileCtrl"
     })
@@ -51,6 +51,13 @@ app.run((fbcreds)=>{
    };
 
    firebase.initializeApp(authConfig);
+});
+
+app.run( $rootScope => {
+    $rootScope.currentChild = null;
+    $rootScope.isChild = false;
+    $rootScope.currentChildId = "";
+    $rootScope.view = "Tender Tummies";
 });
 
 $(document).ready(function(){

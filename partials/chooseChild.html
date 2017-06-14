@@ -1,0 +1,60 @@
+<div ng-repeat="item in children">
+<a ng-href="#!/profile/{{item.id}}">{{item.name}}</a>
+</div>
+
+<!-- Add Child Modal Trigger -->
+<div class="col m4">
+  <a class='waves-effect waves-teal btn-flat' data-target='addChildModal' modal>Add Child</a>
+</div>
+
+
+<!-- Add Child Modal -->
+<div id="addChildModal" class="modal">
+  <div class="modal-content">
+    <h4>Add Child</h4>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="newChild.name">
+        <label>Name</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="newChild.age">
+        <label>Age</label>
+      </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s6">
+        <input type="text" ng-model="newChild.wtNumber">
+        <label>Weight</label>
+      </div>
+      <div input-field class="col s6">
+		    <select class="" ng-model="newChild.wtUnit" material-select watch>
+		      <option value="" disabled>Choose your option</option>
+		      <option value="lbs">lbs</option>
+		      <option value="kg">kg</option>
+		    </select>
+			</div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12 data-list-input">
+        <select class="data-list-input" ng-model="newChild.gender" material-select watch>
+          <option value="" disabled>Choose your option</option>
+          <option value="other">Other, please specify</option>
+          <option value="boy">Boy</option>
+          <option value="girl">Girl</option>
+          <option value="">Prefer Not to Answer</option>
+        </select>
+        <label>Gender</label>
+        <!-- When I get to MVP, adding genders -->
+        <!-- <div id="data-list-input" class="col s10" input-field>
+          <input class="data-list-input" type="text" value="">
+        </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addChild()">Add Child</a>
+  </div>
+</div>
