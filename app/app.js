@@ -22,7 +22,7 @@ app.config( $routeProvider => {
     })
     .when("/rxnDetail/:rxnId", {
         templateUrl: "partials/rxnDetail.html",
-        controller: "RxnDetialCtrl"
+        controller: "RxnDetailCtrl"
     })
     .when("/safe", {
         templateUrl: "partials/safe.html",
@@ -59,12 +59,12 @@ app.run( $rootScope => {
     $rootScope.currentChildId = "";
     $rootScope.view = "Tender Tummies";
 });
-
+// Initilization for modals
 $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
   });
-
+// Initialization for selects
 $(document).ready(function() {
     $('select').material_select();
   });
