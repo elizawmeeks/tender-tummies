@@ -5,7 +5,6 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	let childId = $rootScope.currentChildId;
 	$scope.rxnId = $routeParams.rxnId;
 
-
   $scope.rxn_event = {
   	rxn_id: $scope.rxnId,
   	symptom: [],
@@ -20,6 +19,11 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	RxnFactory.getRxn($scope.rxnId)
   	.then( response => {
   		$scope.currentRxn = response;
+  		if (response.end_date){
+  			$scope.rxnOver = true;
+  		} else {
+  			$scope.rxnOver = false;
+  		}
 	  	TriggerFactory.getTrigger(response.trigger_id)
 	  	.then( response => {
 	  		// $scope.trigger = response;
@@ -31,7 +35,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   $scope.addRxnEvent = () => {
   	console.log("$scope.rxn_event", $scope.rxn_event);
   	RxnFactory.addRxnEvent($scope.rxn_event);
-  	// then reload page function
+  	$scope.getRxnEvents();
   };
 
   	// Initialization for the date picker
@@ -85,7 +89,19 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
-  $scope.getRxn();
-  $scope.getRxnEvents();
+  $scope.endRxn = () => {
+  	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
+  	.then( response => {
+  		console.log("end rxn response", response);
+  		loadPage();
+  	});
+  };
+
+  let loadPage = () => {
+	  $scope.getRxn();
+	  $scope.getRxnEvents();
+  };
+
+  loadPage();
 
 });

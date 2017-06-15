@@ -9,7 +9,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
 	$scope.rxn = {
 		start_date: "",
-		end_date: "",
 		ingestion: "",
 		cid: childId,
 		food_type: ""
