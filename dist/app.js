@@ -291,12 +291,12 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
 app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeParams, TriggerFactory){
 
-	let childId = $rootScope.currentChildId,
-			rxnId = $routeParams.rxnId;
+	let childId = $rootScope.currentChildId;
+	$scope.rxnId = $routeParams.rxnId;
 
 
   $scope.rxn_event = {
-  	rxn_id: rxnId,
+  	rxn_id: $scope.rxnId,
   	symptom: [],
   	type: "",
   	description: "",
@@ -305,8 +305,8 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	time: ""
   };
 
-  $scope.getRxn = (rxnId) => {
-  	RxnFactory.getRxn(rxnId)
+  $scope.getRxn = () => {
+  	RxnFactory.getRxn($scope.rxnId)
   	.then( response => {
   		$scope.currentRxn = response;
 	  	TriggerFactory.getTrigger(response.trigger_id)
@@ -317,7 +317,11 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
-  $scope.getRxn(rxnId);
+  $scope.addRxnEvent = () => {
+  	console.log("$scope.rxn_event", $scope.rxn_event);
+  	RxnFactory.addRxnEvent($scope.rxn_event);
+  	// then reload page function
+  };
 
   	// Initialization for the date picker
 	var currentTime = new Date();
@@ -333,24 +337,45 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	$scope.onStart = function () {
-	    console.log('onStart');
-	};
-	$scope.onRender = function () {
-	    console.log('onRender');
-	};
-	$scope.onOpen = function () {
-	    console.log('onOpen');
-	};
-	$scope.onClose = function () {
-	    console.log('onClose');
-	};
-	$scope.onSet = function () {
-	    console.log('onSet');
-	};
-	$scope.onStop = function () {
-	    console.log('onStop');
-	};
+	// $scope.onStart = function () {
+	//     console.log('onStart');
+	// };
+	// $scope.onRender = function () {
+	//     console.log('onRender');
+	// };
+	// $scope.onOpen = function () {
+	//     console.log('onOpen');
+	// };
+	// $scope.onClose = function () {
+	//     console.log('onClose');
+	// };
+	// $scope.onSet = function () {
+	//     console.log('onSet');
+	// };
+	// $scope.onStop = function () {
+	//     console.log('onStop');
+	// };
+
+	$scope.getRxnEvents = () => {
+  	RxnFactory.getRxnEvents($scope.rxnId)
+  	.then( response => {
+  		// console.log("response", response);
+  		$scope.rxnEvents = [];
+  		for (let value in response){
+  			let dateArray = response[value].date.split("/");
+  			console.log("dateArray", dateArray);
+  			let mon = dateArray[1];
+  			let month = $scope.monthShort[mon-1];
+  			let newDate = `${month} ${dateArray[0]}, ${dateArray[2]}`;
+  			response[value].date = newDate;
+  			$scope.rxnEvents.push(response[value]);
+  		}
+  		console.log("$scope.rxnEvents", $scope.rxnEvents);
+  	});
+  };
+
+  $scope.getRxn();
+  $scope.getRxnEvents();
 
 });
 
@@ -623,10 +648,42 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	});
   };
 
+    // Adds rxn event to database
+  const addRxnEvent = ( object ) => {
+  	return $q( (resolve, reject) => {
+  		let rxnObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/rxn_event.json`, rxnObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
   // Gets all rxns associated with the child
   const getRxns = ( childId ) => {
   	return $q( (resolve, reject) => {
   		$http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="cid"&equalTo="${childId}"`)
+  		.then( response => {
+  			console.log("response", response);
+  			let rxns = response.data;
+  			Object.keys(rxns).forEach( key => {
+  				rxns[key].id = key;
+  			});
+  			resolve(rxns);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Gets all rxn events associated with the rxn
+  const getRxnEvents = ( rxnId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/rxn_event.json?orderBy="rxn_id"&equalTo="${rxnId}"`)
   		.then( response => {
   			console.log("response", response);
   			let rxns = response.data;
@@ -688,7 +745,9 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	getRxns,
   	getRxn,
   	editRxn,
-  	deleteRxn
+  	deleteRxn,
+  	addRxnEvent,
+  	getRxnEvents
   };
 
 });

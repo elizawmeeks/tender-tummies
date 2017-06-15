@@ -1,85 +1,136 @@
 <div class="container">
+	<!-- Add Rxn Event Modal Trigger -->
 	<div class="row">
-		<div class="col md12">
-			<p>{{currentRxn.ingestion}}</p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="rxnDetail">
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnEventModal' modal>Add Reaction Event</a>
+    </div>
+  </div>
+
+  <!-- Rxn Event List -->
+
+  <div ng-repeat="item in rxnEvents" class="row">
+  	<div class="rxnEvent">
+  		<div class="col m4">
+  			<h5>{{item.date}}</h5>
+  		</div>
+  		<div class="col m8">
+  			<div class="row">
+  				<div class="col m4">
+  					{{item.time}}
+  				</div>
+  				<div class="col m4">
+  					Severity: {{item.severity}}
+  				</div>
+  				<div class="col m4">
+  					{{item.type}}
+  				</div>
+  			</div>
+  			<div class="row">
+  				<div class="col m12">
+  					<span ng-repeat="value in item.symptom">{{value}}{{$last ? '' : ', '}}</span>
+  				</div>
+  			</div>
+  			<div class="row">
+  				<div class="col m12">
+  					{{item.description}}
+  				</div>
+  			</div>
+  		</div>
+  	</div>
+  </div>
+	
+<!-- Add Rxn Event Modal (not in a modal yet) -->
+	<div id="addRxnEventModal" class="modal tallModal">
+  	<div class="modal-content">
 			<div class="row">
-				<div class="col m6">
-					<label for="inputCreated">Start date</label>
-					<input input-date
-				    type="text"
-				    name="created"
-				    id="inputCreated"
-				    ng-model="rxn_event.date"
-				    container=""
-				    format="dd/mm/yyyy"
-				    months-full="{{ month }}"
-				    months-short="{{ monthShort }}"
-				    weekdays-full="{{ weekdaysFull }}"
-				    weekdays-short="{{ weekdaysShort }}"
-				    weekdays-letter="{{ weekdaysLetter }}"
-				    disable="disable"
-				    min="{{ minDate }}"
-				    max="{{ maxDate }}"
-				    today="today"
-				    first-day="1"
-				    clear="clear"
-				    close="close"
-				    select-years="15"
-				    on-start="onStart()"
-				    on-render="onRender()"
-				    on-open="onOpen()"
-				    on-close="onClose()"
-				    on-set="onSet()"
-				    on-stop="onStop()" />
+				<div class="col md12">
+					<p>{{currentRxn.ingestion}}</p>
 				</div>
-				<div class="col m6">
-					<div input-field>
-				    <select class="" ng-model="rxn_event.type" material-select watch>
-				      <option>Acute</option>
-				      <option>Chronic</option>
-				    </select>
+			</div>
+			<div class="row">
+				<div class="rxnDetail">
+					<div class="row">
+						<div class="col m6">
+							<label for="inputCreated">Start date</label>
+							<input input-date
+						    type="text"
+						    name="created"
+						    id="inputCreated"
+						    ng-model="rxn_event.date"
+						    container=""
+						    format="dd/mm/yyyy"
+						    months-full="{{ month }}"
+						    months-short="{{ monthShort }}"
+						    weekdays-full="{{ weekdaysFull }}"
+						    weekdays-short="{{ weekdaysShort }}"
+						    weekdays-letter="{{ weekdaysLetter }}"
+						    disable="disable"
+						    min="{{ minDate }}"
+						    max="{{ maxDate }}"
+						    today="today"
+						    first-day="1"
+						    clear="clear"
+						    close="close"
+						    select-years="15"
+						    on-start="onStart()"
+						    on-render="onRender()"
+						    on-open="onOpen()"
+						    on-close="onClose()"
+						    on-set="onSet()"
+						    on-stop="onStop()" />
+						</div>
+						<div class="col m6">
+							<div input-field>
+						    <select class="" ng-model="rxn_event.type" material-select watch>
+						      <option>Acute</option>
+						      <option>Chronic</option>
+						    </select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col m6">
+							<label for="input_starttime">Time</label>
+							<input id="input_starttime" input-clock data-twelvehour="false" type="text" ng-model="rxn_event.time">
+						</div>
+						<div class="col m6">
+							<div input-field class="col s12">
+				        <select class="" ng-model="rxn_event.severity" material-select watch>
+				          <option value="low">Low</option>
+				          <option value="medium">Medium</option>
+				          <option value="high">High</option>
+				        </select>
+				        <label>Severity</label>
+				      </div>
+						</div>
+					</div>
+					<div class="row">
+						<div input-field class="col m12">
+			        <select class="" ng-model="rxn_event.symptom" material-select multiple watch>
+			          <option value="Vomiting">Vomiting</option>
+			          <option value="Diarrhea">Diarrhea</option>
+			          <option value="Lethargy">Lethargy</option>
+			          <option value="Pallor">Pallor</option>
+			          <option value="Abdominal Distension">Abdominal Distension</option>
+			          <option value="Low Blood Pressure">Low Blood Pressure</option>
+			          <option value="Low Body Temperature">Low Body Temperature</option>
+			          <option value="Shock">Shock</option>
+			        </select>
+			        <label>Symptoms</label>
+			      </div>
+			    </div>
+			    <div class="row">
+			      <div input-field class="col m12">
+					    <textarea ng-model="rxn_event.description" class="materialize-textarea"></textarea>
+					    <label>Comments</label>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col m6">
-					<label for="input_starttime">Time</label>
-					<input id="input_starttime" input-clock data-twelvehour="false" type="text" ng-model="rxn_event.time">
-				</div>
-				<div class="col m6">
-					<div input-field class="col s12">
-		        <select class="" ng-model="rxn_event.severity" material-select watch>
-		          <option value="low">Low</option>
-		          <option value="medium">Medium</option>
-		          <option value="high">High</option>
-		        </select>
-		        <label>Severity</label>
-		      </div>
-				</div>
-			</div>
-			<div class="row">
-				<div input-field class="col m6">
-	        <select class="" ng-model="rxn_event.symptom" material-select multiple watch>
-	          <option value="Vomiting">Vomiting</option>
-	          <option value="Diarrhea">Diarrhea</option>
-	          <option value="Lethargy">Lethargy</option>
-	          <option value="Pallor">Pallor</option>
-	          <option value="Abdominal Distension">Abdominal Distension</option>
-	          <option value="Low Blood Pressure">Low Blood Pressure</option>
-	          <option value="Low Body Temperature">Low Body Temperature</option>
-	          <option value="Shock">Shock</option>
-	        </select>
-	        <label>Symptoms</label>
-	      </div>
-	      <div input-field class="col m6">
-			    <input type="text" ng-model="rxn_event.comments" length="150">
-			    <label>Comments</label>
-				</div>
-			</div>
 		</div>
+		<div class="modal-footer">
+    <a href="#!/rxnDetail/{{rxnId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addRxnEvent()">Add Reaction Event</a>
+  </div>
 	</div>
+
 </div>

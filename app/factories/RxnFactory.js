@@ -16,10 +16,42 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	});
   };
 
+    // Adds rxn event to database
+  const addRxnEvent = ( object ) => {
+  	return $q( (resolve, reject) => {
+  		let rxnObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/rxn_event.json`, rxnObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
   // Gets all rxns associated with the child
   const getRxns = ( childId ) => {
   	return $q( (resolve, reject) => {
   		$http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="cid"&equalTo="${childId}"`)
+  		.then( response => {
+  			console.log("response", response);
+  			let rxns = response.data;
+  			Object.keys(rxns).forEach( key => {
+  				rxns[key].id = key;
+  			});
+  			resolve(rxns);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Gets all rxn events associated with the rxn
+  const getRxnEvents = ( rxnId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/rxn_event.json?orderBy="rxn_id"&equalTo="${rxnId}"`)
   		.then( response => {
   			console.log("response", response);
   			let rxns = response.data;
@@ -81,7 +113,9 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	getRxns,
   	getRxn,
   	editRxn,
-  	deleteRxn
+  	deleteRxn,
+  	addRxnEvent,
+  	getRxnEvents
   };
 
 });
