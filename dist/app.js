@@ -136,7 +136,7 @@ app.controller("NavCtrl", function($scope, ChildFactory, NavDataFactory, $rootSc
 
 "use strict";
 
-app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $route, $rootScope){
+app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $route, $rootScope, TriggerFactory, SafeFactory){
 	// Establish the 
 	$scope.routeId = $routeParams.profileId;
 
@@ -167,6 +167,29 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 			$route.reload();
 		});
 	};
+
+	// Get safes and saves teh number of safes forthe profiles view.
+	SafeFactory.getSafes($scope.routeId)
+	.then( response => {
+		console.log("response", response);
+		let safeArray = [];
+		// Putting all of the nutrition arrays into one, nested array.
+		for (let element in response){
+			safeArray.push(response[element]);
+		}
+		$scope.numSafes = safeArray.length;
+		});
+
+	// Get triggers and saves the number of triggers for the profiles view.
+	TriggerFactory.getTriggers($scope.routeId)
+  	.then( response => {
+  		console.log(response);
+  		let triggerArray = [];
+  		for (let element in response){
+				triggerArray.push(response[element]);
+			}
+  		$scope.numTriggers = triggerArray.length;
+  	});
     
 });
 
