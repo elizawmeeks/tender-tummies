@@ -22,7 +22,7 @@ app.config( $routeProvider => {
     })
     .when("/rxnDetail/:rxnId", {
         templateUrl: "partials/rxnDetail.html",
-        controller: "RxnDetialCtrl"
+        controller: "RxnDetailCtrl"
     })
     .when("/safe", {
         templateUrl: "partials/safe.html",
@@ -59,15 +59,16 @@ app.run( $rootScope => {
     $rootScope.currentChildId = "";
     $rootScope.view = "Tender Tummies";
 });
-
+// Initilization for modals
 $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
   });
-
+// Initialization for selects
 $(document).ready(function() {
     $('select').material_select();
   });
+
 "use strict";
 
 app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
@@ -171,16 +172,226 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 
 "use strict";
 
-app.controller("RxnCtrl", function($scope){
+app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
 
+	// Sets current child id into an easier to use, local, variable.
+	let childId = $rootScope.currentChildId;
+
+	$rootScope.view = "Reactions";
+
+	$scope.rxn = {
+		start_date: "",
+		ingestion: "",
+		cid: childId,
+		food_type: ""
+	};
+
+	// Pulls all Rxns and sets them as $scope.RxnList
+  $scope.getRxns = () => {
+  	RxnFactory.getRxns(childId)
+  	.then( response => {
+  		console.log("getRxns response", response);
+  		$scope.RxnFoods = [];
+  		let getTrigger = (triggerId, rxnObj) => {
+  			TriggerFactory.getTrigger(triggerId)
+  			.then( trigger => {
+  				rxnObj.food = trigger.food;
+  				$scope.RxnFoods.push(rxnObj);
+  			});
+  		};
+  		for (let value in response){
+  			getTrigger(response[value].trigger_id, response[value]);
+  		}
+  		console.log("RxnFoods", $scope.RxnFoods);
+  	});
+  };
+
+  // Pulls one rxn and sets it as $scope.currentRxn
+  $scope.getRxn = (rxnId) => {
+  	RxnFactory.getRxn(rxnId)
+  	.then( response => {
+  		$scope.currentRxn = response;
+  	});
+  };
+
+  // Adds reaction to firebase
+  $scope.addRxn = () => {
+  	console.log("$scope.rxn", $scope.rxn);
+  	RxnFactory.addRxn($scope.rxn)
+  	.then( response => {
+  		$scope.getRxns();
+  	});
+  };
+
+  // Pulls all Triggers and sets them as $scope.triggerList to populate the dropdown in the modals. You need this here. Don't change it.
+  $scope.getTriggers = () => {
+  	TriggerFactory.getTriggers(childId)
+  	.then( response => {
+  		$scope.triggerList = response;
+  		console.log("$scope.triggerList", $scope.triggerList);
+  	});
+  };
+
+  // Edits rxn object from the modal window
+  $scope.editRxn = (rxnId, rxnObj) => {
+  	RxnFactory.editRxn(rxnId, rxnObj)
+  	.then( response => {
+  		$scope.getRxns();
+  	});
+  };
+
+  // Deletes rxn objects from firebase
+  $scope.deleteRxn = (rxnId) => {
+  	RxnFactory.deleteRxn(rxnId)
+  	.then( response => {
+  		$scope.getRxns();
+  	});
+  };
+
+  $scope.getRxns();
+  $scope.getTriggers();
+
+	// Initialization for the date picker
+	var currentTime = new Date();
+	$scope.currentTime = currentTime;
+	$scope.month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	$scope.monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	$scope.weekdaysFull = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	$scope.weekdaysLetter = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+	$scope.disable = [false, 1, 7];
+	$scope.today = 'Today';
+	$scope.clear = 'Clear';
+	$scope.close = 'Close';
+	var days = 15;
+	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
+	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
+	$scope.onStart = function () {
+	    console.log('onStart');
+	};
+	$scope.onRender = function () {
+	    console.log('onRender');
+	};
+	$scope.onOpen = function () {
+	    console.log('onOpen');
+	};
+	$scope.onClose = function () {
+	    console.log('onClose');
+	};
+	$scope.onSet = function () {
+	    console.log('onSet');
+	};
+	$scope.onStop = function () {
+	    console.log('onStop');
+	};
     
 });
 
 "use strict";
 
-app.controller("RxnDetailCtrl", function($scope){
+app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeParams, TriggerFactory){
 
-    
+	let childId = $rootScope.currentChildId;
+	$scope.rxnId = $routeParams.rxnId;
+
+  $scope.rxn_event = {
+  	rxn_id: $scope.rxnId,
+  	symptom: [],
+  	type: "",
+  	description: "",
+  	severity: "",
+  	date: "",
+  	time: ""
+  };
+
+  $scope.getRxn = () => {
+  	RxnFactory.getRxn($scope.rxnId)
+  	.then( response => {
+  		$scope.currentRxn = response;
+  		if (response.end_date){
+  			$scope.rxnOver = true;
+  		} else {
+  			$scope.rxnOver = false;
+  		}
+	  	TriggerFactory.getTrigger(response.trigger_id)
+	  	.then( response => {
+	  		// $scope.trigger = response;
+	  		$rootScope.view = response.food + " Reaction";
+  		});
+  	});
+  };
+
+  $scope.addRxnEvent = () => {
+  	console.log("$scope.rxn_event", $scope.rxn_event);
+  	RxnFactory.addRxnEvent($scope.rxn_event);
+  	$scope.getRxnEvents();
+  };
+
+  	// Initialization for the date picker
+	var currentTime = new Date();
+	$scope.currentTime = currentTime;
+	$scope.month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	$scope.monthShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	$scope.weekdaysFull = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	$scope.weekdaysLetter = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+	$scope.disable = [false, 1, 7];
+	$scope.today = 'Today';
+	$scope.clear = 'Clear';
+	$scope.close = 'Close';
+	var days = 15;
+	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
+	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
+	// $scope.onStart = function () {
+	//     console.log('onStart');
+	// };
+	// $scope.onRender = function () {
+	//     console.log('onRender');
+	// };
+	// $scope.onOpen = function () {
+	//     console.log('onOpen');
+	// };
+	// $scope.onClose = function () {
+	//     console.log('onClose');
+	// };
+	// $scope.onSet = function () {
+	//     console.log('onSet');
+	// };
+	// $scope.onStop = function () {
+	//     console.log('onStop');
+	// };
+
+	$scope.getRxnEvents = () => {
+  	RxnFactory.getRxnEvents($scope.rxnId)
+  	.then( response => {
+  		// console.log("response", response);
+  		$scope.rxnEvents = [];
+  		for (let value in response){
+  			let dateArray = response[value].date.split("/");
+  			console.log("dateArray", dateArray);
+  			let mon = dateArray[1];
+  			let month = $scope.monthShort[mon-1];
+  			let newDate = `${month} ${dateArray[0]}, ${dateArray[2]}`;
+  			response[value].date = newDate;
+  			$scope.rxnEvents.push(response[value]);
+  		}
+  		console.log("$scope.rxnEvents", $scope.rxnEvents);
+  	});
+  };
+
+  $scope.endRxn = () => {
+  	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
+  	.then( response => {
+  		console.log("end rxn response", response);
+  		loadPage();
+  	});
+  };
+
+  let loadPage = () => {
+	  $scope.getRxn();
+	  $scope.getRxnEvents();
+  };
+
+  loadPage();
+
 });
 
 "use strict";
@@ -320,7 +531,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
   	TriggerFactory.getTrigger(triggerId)
   	.then( response => {
   		$scope.currentTrigger = response;
-  		// console.log("$scope.currentTrigger", $scope.currentTrigger);
   	});
   };
 
@@ -439,6 +649,122 @@ app.factory("NavDataFactory", function($q, $http, fbcreds){
 
 app.factory("RxnFactory", function($q, $http, fbcreds){
     
+    // Adds rxn to database
+  const addRxn = ( object ) => {
+  	return $q( (resolve, reject) => {
+  		let rxnObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/rxn.json`, rxnObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+    // Adds rxn event to database
+  const addRxnEvent = ( object ) => {
+  	return $q( (resolve, reject) => {
+  		let rxnObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/rxn_event.json`, rxnObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Gets all rxns associated with the child
+  const getRxns = ( childId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="cid"&equalTo="${childId}"`)
+  		.then( response => {
+  			console.log("response", response);
+  			let rxns = response.data;
+  			Object.keys(rxns).forEach( key => {
+  				rxns[key].id = key;
+  			});
+  			resolve(rxns);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Gets all rxn events associated with the rxn
+  const getRxnEvents = ( rxnId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/rxn_event.json?orderBy="rxn_id"&equalTo="${rxnId}"`)
+  		.then( response => {
+  			console.log("response", response);
+  			let rxns = response.data;
+  			Object.keys(rxns).forEach( key => {
+  				rxns[key].id = key;
+  			});
+  			resolve(rxns);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Get one rxn to populate edit modal and delete modal
+  const getRxn = ( rxnId ) => {
+  	return $q((resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/rxn/${rxnId}.json`)
+          .then((response) => {
+          	let rxn = response.data;
+          	rxn.id = rxnId;
+              resolve(rxn);
+          })
+          .catch((error) => {
+              reject(error);
+          });
+    });
+  };
+
+  // Edit rxn object
+  const editRxn = ( rxnID, rxnObj ) => {
+  	let changedObj = JSON.stringify(rxnObj);
+  	return $q( (resolve, reject) => {
+  		$http.patch(`${fbcreds.databaseURL}/rxn/${rxnID}.json`, changedObj)
+    	.then( response => {
+    		resolve(response);
+    	})
+    	.catch( error => {
+    		reject(error);
+    	});
+  	});
+  };
+
+  // Delete rxn from database. Maybe they passed a failed food! Hooray! Grow out of that FPIES, baby!
+  const deleteRxn = ( rxnId ) => {
+		return $q( (resolve, reject) => {
+			$http.delete(`${fbcreds.databaseURL}/rxn/${rxnId}.json`)
+			.then( response => {
+				resolve(response);
+			})
+			.catch( error => {
+				reject(error);
+			});
+		});
+	};
+
+  return {
+  	addRxn,
+  	getRxns,
+  	getRxn,
+  	editRxn,
+  	deleteRxn,
+  	addRxnEvent,
+  	getRxnEvents
+  };
+
 });
 "use strict";
 
@@ -584,17 +910,17 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
 
   // Edit trigger object
   const editTrigger = ( triggerID, triggerObj ) => {
-    	let changedObj = JSON.stringify(triggerObj);
-    	return $q( (resolve, reject) => {
-    		$http.patch(`${fbcreds.databaseURL}/trigger/${triggerID}.json`, changedObj)
-	    	.then( response => {
-	    		resolve(response);
-	    	})
-	    	.catch( error => {
-	    		reject(error);
-	    	});
+  	let changedObj = JSON.stringify(triggerObj);
+  	return $q( (resolve, reject) => {
+  		$http.patch(`${fbcreds.databaseURL}/trigger/${triggerID}.json`, changedObj)
+    	.then( response => {
+    		resolve(response);
+    	})
+    	.catch( error => {
+    		reject(error);
     	});
-    };
+  	});
+  };
 
   // Delete trigger from database. Maybe they passed a failed food! Hooray! Grow out of that FPIES, baby!
   const deleteTrigger = ( triggerId ) => {

@@ -51,17 +51,17 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
 
   // Edit trigger object
   const editTrigger = ( triggerID, triggerObj ) => {
-    	let changedObj = JSON.stringify(triggerObj);
-    	return $q( (resolve, reject) => {
-    		$http.patch(`${fbcreds.databaseURL}/trigger/${triggerID}.json`, changedObj)
-	    	.then( response => {
-	    		resolve(response);
-	    	})
-	    	.catch( error => {
-	    		reject(error);
-	    	});
+  	let changedObj = JSON.stringify(triggerObj);
+  	return $q( (resolve, reject) => {
+  		$http.patch(`${fbcreds.databaseURL}/trigger/${triggerID}.json`, changedObj)
+    	.then( response => {
+    		resolve(response);
+    	})
+    	.catch( error => {
+    		reject(error);
     	});
-    };
+  	});
+  };
 
   // Delete trigger from database. Maybe they passed a failed food! Hooray! Grow out of that FPIES, baby!
   const deleteTrigger = ( triggerId ) => {

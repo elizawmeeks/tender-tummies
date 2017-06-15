@@ -1,0 +1,176 @@
+<!-- Add Reaction Modal -->
+<div class="container">
+  <div class="row">
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnModal' modal>Add Reaction Event</a>
+    </div>
+  </div>
+
+<!-- Rxn List, including modal triggers for edit, delete, and detail -->
+	<div class="row" ng-repeat="item in RxnFoods">
+    <div class="col m2">
+      <a class="waves-effect waves-teal btn-flat"  data-target='editRxnModal' ng-click="getRxn( item.id )" modal><i class="material-icons">mode_edit</i></a>
+    </div>
+    <div class="col m2">
+      <a class="waves-effect waves-teal btn-flat"  data-target='deleteRxnModal' ng-click="getRxn( item.id )" modal><i class="material-icons">delete</i></a>
+    </div>
+    <div class="col m4">
+      <a href="#!/rxnDetail/{{item.id}}"><h2>{{item.food}}</h2></a>
+    </div>
+    <div class="col m4">
+      <a ng-click="getTrigger( item.id )"><p>{{item.start_date}}</p></a>
+    </div>
+  </div>
+</div>
+
+<!-- Add Rxn Modal -->
+<div id="addRxnModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>Add Reaction</h4>
+    <div class="row">
+    	<div class="col s12">
+	      <label for="inputCreated">Start date</label>
+				<input input-date
+			    type="text"
+			    name="created"
+			    id="inputCreated"
+			    ng-model="rxn.start_date"
+			    container=""
+			    format="dd/mm/yyyy"
+			    months-full="{{ month }}"
+			    months-short="{{ monthShort }}"
+			    weekdays-full="{{ weekdaysFull }}"
+			    weekdays-short="{{ weekdaysShort }}"
+			    weekdays-letter="{{ weekdaysLetter }}"
+			    disable="disable"
+			    min="{{ minDate }}"
+			    max="{{ maxDate }}"
+			    today="today"
+			    first-day="1"
+			    clear="clear"
+			    close="close"
+			    select-years="15"
+			    on-start="onStart()"
+			    on-render="onRender()"
+			    on-open="onOpen()"
+			    on-close="onClose()"
+			    on-set="onSet()"
+			    on-stop="onStop()" />
+			</div>
+    </div>
+    <div class="row">
+      <div input-field>
+        <select class="" ng-model="rxn.ingestion" material-select watch>
+          <option value="Direct Ingestion">Direct Ingestion</option>
+          <option value="Cross Contamination">Cross Contamination</option>
+          <option value="Breastmilk">Breastmilk</option>
+          <option value="ng-tube">ng-tube</option>
+          <option value="g-tube">g-tube</option>
+        </select>
+        <label>Ingestion</label>
+      </div>
+    </div>
+    <div class="row">
+    	<div class="col m12">
+	      <div input-field>
+	        <select class="" ng-model="rxn.trigger_id" material-select watch>
+	          <option ng-repeat="value in triggerList" value="{{value.id}}">{{value.food}}</option>
+	        </select>
+	        <label>Trigger Food</label>
+	      </div>
+	    </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="rxn.food_type" placeholder="Coconut Milk">
+        <label>Type of Food</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/rxn" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addRxn()">Add Reaction</a>
+  </div>
+</div>
+
+<!-- Edit Rxn Modal -->
+<div id="editRxnModal" class="modal tallModal">
+  <div class="modal-content">
+    <h4>Edit Reaction</h4>
+    <div class="row">
+    	<div class="col s12">
+	      <label for="inputCreated">Start date</label>
+				<input input-date
+			    type="text"
+			    name="created"
+			    id="inputCreated"
+			    ng-model="currentRxn.start_date"
+			    container=""
+			    format="dd/mm/yyyy"
+			    months-full="{{ month }}"
+			    months-short="{{ monthShort }}"
+			    weekdays-full="{{ weekdaysFull }}"
+			    weekdays-short="{{ weekdaysShort }}"
+			    weekdays-letter="{{ weekdaysLetter }}"
+			    disable="disable"
+			    min="{{ minDate }}"
+			    max="{{ maxDate }}"
+			    today="today"
+			    first-day="1"
+			    clear="clear"
+			    close="close"
+			    select-years="15"
+			    on-start="onStart()"
+			    on-render="onRender()"
+			    on-open="onOpen()"
+			    on-close="onClose()"
+			    on-set="onSet()"
+			    on-stop="onStop()" />
+			</div>
+    </div>
+    <div class="row">
+      <div input-field>
+        <select class="" ng-model="currentRxn.ingestion" material-select watch>
+          <option value="Direct Ingestion">Direct Ingestion</option>
+          <option value="Cross Contamination">Cross Contamination</option>
+          <option value="Breastmilk">Breastmilk</option>
+          <option value="ng-tube">ng-tube</option>
+          <option value="g-tube">g-tube</option>
+        </select>
+        <label>Ingestion</label>
+      </div>
+    </div>
+    <div class="row">
+    	<div class="col m12">
+	      <div input-field>
+	        <select class="" ng-model="currentRxn.trigger_id" material-select watch>
+	          <option ng-repeat="value in triggerList" value="{{value.id}}">{{value.food}}</option>
+	        </select>
+	        <label>Trigger Food</label>
+	      </div>
+	    </div>
+    </div>
+    <div class="row">
+      <div input-field class="col s12">
+        <input type="text" ng-model="currentRxn.food_type" placeholder="Coconut Milk">
+        <label>Type of Food</label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/rxn" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editRxn(currentRxn.id, currentRxn)">Edit Reaction</a>
+  </div>
+</div>
+
+<!-- Delete Trigger Modal -->
+<div id="deleteRxnModal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <div input-field class="col s12">
+        <p>Are you sure you want to delete this {{currentRxn.food_type}} reaction?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/rxn" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteRxn(currentRxn.id)">Delete {{currentRxn.food_type}} Reaction</a>
+  </div>
+</div>
