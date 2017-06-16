@@ -515,7 +515,7 @@ app.controller("TrialDetailCtrl", function($scope){
 
 "use strict";
 
-app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
+app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
 
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
@@ -549,12 +549,22 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
   	});
   };
 
-  // Pulls one triggers and sets them as $scope.currentTrigger
+  // Pulls one trigger and sets them as $scope.currentTrigger to display trigger details in a modal.
   $scope.getTrigger = (triggerId) => {
-  	TriggerFactory.getTrigger(triggerId)
-  	.then( response => {
-  		$scope.currentTrigger = response;
-  	});
+  	let p1 = TriggerFactory.getTrigger(triggerId),
+        p2 = RxnFactory.getRxnsByTrigger(triggerId);
+    Promise.all([p1,p2])
+    .then( values => {
+  		$scope.currentTrigger = values[0];
+      $scope.rxnArray = [];
+      for (let thing in values[1]){
+        $scope.rxnArray.push(values[1][thing]);
+      }
+      console.log("rxnArray", $scope.rxnArray);      
+    });
+
+
+
   };
 
   // Edits trigger object from the modal window
@@ -718,6 +728,24 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	});
   };
 
+  // Gets all rxns associated with the child
+  const getRxnsByTrigger = ( triggerId ) => {
+    return $q( (resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="trigger_id"&equalTo="${triggerId}"`)
+      .then( response => {
+        let rxns = response.data;
+        console.log("getRxnsByTrigger response", rxns);
+        // Object.keys(rxns).forEach( key => {
+        //   rxns[key].id = key;
+        // });
+        resolve(rxns);
+      })
+      .catch( error => {
+        reject(error);
+      });
+    });
+  };
+
   // Gets all rxn events associated with the rxn
   const getRxnEvents = ( rxnId ) => {
   	return $q( (resolve, reject) => {
@@ -785,7 +813,8 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	editRxn,
   	deleteRxn,
   	addRxnEvent,
-  	getRxnEvents
+  	getRxnEvents,
+    getRxnsByTrigger
   };
 
 });
