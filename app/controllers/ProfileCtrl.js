@@ -35,7 +35,6 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 	// Get safes and saves teh number of safes forthe profiles view.
 	SafeFactory.getSafes($scope.routeId)
 	.then( response => {
-		console.log("response", response);
 		let safeArray = [];
 		// Putting all of the nutrition arrays into one, nested array.
 		for (let element in response){
@@ -47,7 +46,6 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 	// Get triggers and saves the number of triggers for the profiles view.
 	TriggerFactory.getTriggers($scope.routeId)
   	.then( response => {
-  		console.log(response);
   		let triggerArray = [];
   		for (let element in response){
 				triggerArray.push(response[element]);

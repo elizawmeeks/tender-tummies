@@ -11,13 +11,14 @@
 
   <div class="row">
 		<div class="col md12">
+			<p>{{currentRxn.food_type}}</p>
 			<p>{{currentRxn.ingestion}}</p>
 		</div>
 	</div>
 
   <div class="row" ng-show="rxnOver">
   	<div class="col m10 offset-m1">
-  		This reaction is over.
+  		This {{food}} reaction is over.
   	</div>
   </div>
 
@@ -79,28 +80,7 @@
 					    type="text"
 					    name="created"
 					    id="inputCreated"
-					    ng-model="rxn_event.date"
-					    container=""
-					    format="dd/mm/yyyy"
-					    months-full="{{ month }}"
-					    months-short="{{ monthShort }}"
-					    weekdays-full="{{ weekdaysFull }}"
-					    weekdays-short="{{ weekdaysShort }}"
-					    weekdays-letter="{{ weekdaysLetter }}"
-					    disable="disable"
-					    min="{{ minDate }}"
-					    max="{{ maxDate }}"
-					    today="today"
-					    first-day="1"
-					    clear="clear"
-					    close="close"
-					    select-years="15"
-					    on-start="onStart()"
-					    on-render="onRender()"
-					    on-open="onOpen()"
-					    on-close="onClose()"
-					    on-set="onSet()"
-					    on-stop="onStop()" />
+					    ng-model="rxn_event.date"/>
 					</div>
 					<div class="col m6">
 						<div input-field>
@@ -231,28 +211,7 @@
 			    type="text"
 			    name="created"
 			    id="inputCreated"
-			    ng-model="currentRxn.end_date"
-			    container=""
-			    format="dd/mm/yyyy"
-			    months-full="{{ month }}"
-			    months-short="{{ monthShort }}"
-			    weekdays-full="{{ weekdaysFull }}"
-			    weekdays-short="{{ weekdaysShort }}"
-			    weekdays-letter="{{ weekdaysLetter }}"
-			    disable="disable"
-			    min="{{ minDate }}"
-			    max="{{ maxDate }}"
-			    today="today"
-			    first-day="1"
-			    clear="clear"
-			    close="close"
-			    select-years="15"
-			    on-start="onStart()"
-			    on-render="onRender()"
-			    on-open="onOpen()"
-			    on-close="onClose()"
-			    on-set="onSet()"
-			    on-stop="onStop()" />
+			    ng-model="currentRxn.end_date"/>
 			</div>
     </div>
   </div>

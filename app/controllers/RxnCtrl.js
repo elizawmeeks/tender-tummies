@@ -14,11 +14,10 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 		food_type: ""
 	};
 
-	// Pulls all Rxns and sets them as $scope.RxnList
+	// Pulls all Rxns and sets them as $scope.RxnFoods, an array for dispaly in the reaction view.
   $scope.getRxns = () => {
   	RxnFactory.getRxns(childId)
   	.then( response => {
-  		console.log("getRxns response", response);
   		$scope.RxnFoods = [];
   		let getTrigger = (triggerId, rxnObj) => {
   			TriggerFactory.getTrigger(triggerId)
@@ -30,11 +29,10 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
   		for (let value in response){
   			getTrigger(response[value].trigger_id, response[value]);
   		}
-  		console.log("RxnFoods", $scope.RxnFoods);
   	});
   };
 
-  // Pulls one rxn and sets it as $scope.currentRxn
+  // Pulls one rxn and sets it as $scope.currentRxn for editing and deleting.
   $scope.getRxn = (rxnId) => {
   	RxnFactory.getRxn(rxnId)
   	.then( response => {
@@ -44,7 +42,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
   // Adds reaction to firebase
   $scope.addRxn = () => {
-  	console.log("$scope.rxn", $scope.rxn);
   	RxnFactory.addRxn($scope.rxn)
   	.then( response => {
   		$scope.getRxns();
@@ -56,7 +53,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
   		$scope.triggerList = response;
-  		console.log("$scope.triggerList", $scope.triggerList);
   	});
   };
 
@@ -93,23 +89,5 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	$scope.onStart = function () {
-	    console.log('onStart');
-	};
-	$scope.onRender = function () {
-	    console.log('onRender');
-	};
-	$scope.onOpen = function () {
-	    console.log('onOpen');
-	};
-	$scope.onClose = function () {
-	    console.log('onClose');
-	};
-	$scope.onSet = function () {
-	    console.log('onSet');
-	};
-	$scope.onStop = function () {
-	    console.log('onStop');
-	};
     
 });

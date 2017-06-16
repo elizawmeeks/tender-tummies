@@ -18,7 +18,6 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	$scope.getSafes = () => {
 		SafeFactory.getSafes(childId)
 		.then( response => {
-			console.log("response", response);
 			$scope.safeList = response;
 			let nutritionArray = [];
 			// Putting all of the nutrition arrays into one, nested array.
@@ -55,9 +54,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	$scope.getSafe = (safeId, safeObj) => {
     SafeFactory.getSafe(safeId)
     .then( response => {
-    	console.log("response", response);
     	$scope.currentSafe = response;
-    	console.log("$scope.currentSafe", $scope.currentSafe);
     });
 	};
 

@@ -113,13 +113,11 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 		.then( stuff => {
 			$scope.getChildren();
 		});
-		console.log("ChildObj $scope.child", $scope.newChild);
 	};
 
 	$scope.getChildren = () => {
 		ChildFactory.getChildren()
 		.then( childrenObj => {
-			console.log("childrenObj", childrenObj);
 			$scope.children = childrenObj;
 		});
 	};
@@ -171,7 +169,6 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 	// Get safes and saves teh number of safes forthe profiles view.
 	SafeFactory.getSafes($scope.routeId)
 	.then( response => {
-		console.log("response", response);
 		let safeArray = [];
 		// Putting all of the nutrition arrays into one, nested array.
 		for (let element in response){
@@ -183,7 +180,6 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 	// Get triggers and saves the number of triggers for the profiles view.
 	TriggerFactory.getTriggers($scope.routeId)
   	.then( response => {
-  		console.log(response);
   		let triggerArray = [];
   		for (let element in response){
 				triggerArray.push(response[element]);
@@ -209,11 +205,10 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 		food_type: ""
 	};
 
-	// Pulls all Rxns and sets them as $scope.RxnList
+	// Pulls all Rxns and sets them as $scope.RxnFoods, an array for dispaly in the reaction view.
   $scope.getRxns = () => {
   	RxnFactory.getRxns(childId)
   	.then( response => {
-  		console.log("getRxns response", response);
   		$scope.RxnFoods = [];
   		let getTrigger = (triggerId, rxnObj) => {
   			TriggerFactory.getTrigger(triggerId)
@@ -225,11 +220,10 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
   		for (let value in response){
   			getTrigger(response[value].trigger_id, response[value]);
   		}
-  		console.log("RxnFoods", $scope.RxnFoods);
   	});
   };
 
-  // Pulls one rxn and sets it as $scope.currentRxn
+  // Pulls one rxn and sets it as $scope.currentRxn for editing and deleting.
   $scope.getRxn = (rxnId) => {
   	RxnFactory.getRxn(rxnId)
   	.then( response => {
@@ -239,7 +233,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
   // Adds reaction to firebase
   $scope.addRxn = () => {
-  	console.log("$scope.rxn", $scope.rxn);
   	RxnFactory.addRxn($scope.rxn)
   	.then( response => {
   		$scope.getRxns();
@@ -251,7 +244,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
   		$scope.triggerList = response;
-  		console.log("$scope.triggerList", $scope.triggerList);
   	});
   };
 
@@ -288,24 +280,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	$scope.onStart = function () {
-	    console.log('onStart');
-	};
-	$scope.onRender = function () {
-	    console.log('onRender');
-	};
-	$scope.onOpen = function () {
-	    console.log('onOpen');
-	};
-	$scope.onClose = function () {
-	    console.log('onClose');
-	};
-	$scope.onSet = function () {
-	    console.log('onSet');
-	};
-	$scope.onStop = function () {
-	    console.log('onStop');
-	};
     
 });
 
@@ -326,6 +300,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	time: ""
   };
 
+  // Gets the current reaction to set the view, and put reaction details at the top.
   $scope.getRxn = () => {
   	RxnFactory.getRxn($scope.rxnId)
   	.then( response => {
@@ -337,7 +312,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   		}
 	  	TriggerFactory.getTrigger(response.trigger_id)
 	  	.then( response => {
-	  		// $scope.trigger = response;
+	  		$scope.food = response.food;
 	  		$rootScope.view = response.food + " Reaction";
   		});
   	});
@@ -354,8 +329,6 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   $scope.getRxnEvent = (eventId) => {
     RxnFactory.getRxnEvent(eventId)
     .then( response => {
-      let dateArray = response.date.split(" ");
-      console.log(dateArray);
       $scope.currentEvent = response;
     });
   };
@@ -374,27 +347,8 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	// $scope.onStart = function () {
-	//     console.log('onStart');
-	// };
-	// $scope.onRender = function () {
-	//     console.log('onRender');
-	// };
-	// $scope.onOpen = function () {
-	//     console.log('onOpen');
-	// };
-	// $scope.onClose = function () {
-	//     console.log('onClose');
-	// };
-	// $scope.onSet = function () {
-	//     console.log('onSet');
-	// };
-	// $scope.onStop = function () {
-	//     console.log('onStop');
-	// };
 
   $scope.editRxnEvent = ( eventId, eventObj ) => {
-    console.log(eventObj);
     RxnFactory.editRxnEvent( eventId, eventObj )
     .then( () => {
       $scope.getRxnEvents();
@@ -413,26 +367,22 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
-  		// console.log("response", response);
   		$scope.rxnEvents = [];
   		for (let value in response){
         // Turning the date from dd/mm/yyyy to 4 Jun, 2017 format.
   			let dateArray = response[value].date.split("/");
-  			console.log("dateArray", dateArray);
   			let mon = dateArray[1];
   			let month = $scope.monthShort[mon-1];
   			let newDate = `${month} ${dateArray[0]}, ${dateArray[2]}`;
   			response[value].date = newDate;
   			$scope.rxnEvents.push(response[value]);
   		}
-  		console.log("$scope.rxnEvents", $scope.rxnEvents);
   	});
   };
 
   $scope.endRxn = () => {
   	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
   	.then( response => {
-  		console.log("end rxn response", response);
   		loadPage();
   	});
   };
@@ -466,7 +416,6 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	$scope.getSafes = () => {
 		SafeFactory.getSafes(childId)
 		.then( response => {
-			console.log("response", response);
 			$scope.safeList = response;
 			let nutritionArray = [];
 			// Putting all of the nutrition arrays into one, nested array.
@@ -503,9 +452,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	$scope.getSafe = (safeId, safeObj) => {
     SafeFactory.getSafe(safeId)
     .then( response => {
-    	console.log("response", response);
     	$scope.currentSafe = response;
-    	console.log("$scope.currentSafe", $scope.currentSafe);
     });
 	};
 
@@ -562,7 +509,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 
   // Add trigger from the trigger modal
   $scope.addTrigger = () => {
-  	console.log("$scope.trigger", $scope.trigger);
   	TriggerFactory.addTrigger( $scope.trigger )
   	.then ( response => {
   		$scope.getTriggers();
@@ -573,7 +519,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
   $scope.getTriggers = () => {
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
-  		console.log(response);
   		$scope.triggerList = response;
   	});
   };
