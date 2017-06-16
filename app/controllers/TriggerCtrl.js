@@ -44,8 +44,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       $scope.rxnArray = [];
       for (let thing in values[1]){
         $scope.rxnArray.push(values[1][thing]);
-      }
-      console.log("rxnArray", $scope.rxnArray);      
+      }     
     });
 
 

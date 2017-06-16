@@ -1,13 +1,19 @@
 <div class="container">
 	<!-- Add Rxn Event Modal Trigger -->
 	<div class="row">
-    <div class="col m4">
+    <div class="col m5">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnEventModal' modal>Add Reaction Event</a>
     </div>
     <div class="col m4">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endRxnEventModal' modal>End Reaction</a>
     </div>
   </div>
+
+  <div class="row">
+		<div class="col md12">
+			<p>{{currentRxn.ingestion}}</p>
+		</div>
+	</div>
 
   <div class="row" ng-show="rxnOver">
   	<div class="col m10 offset-m1">
@@ -19,7 +25,19 @@
 
   <div ng-repeat="item in rxnEvents" class="row rxnEvent">
 		<div class="col m4">
-			<h5>{{item.date}}</h5>
+			<div class="row">
+				<div class="col m12">
+					<h5>{{item.date}}</h5>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col m6">
+					<a data-target='editRxnEventModal' ng-click="getRxnEvent(item.id)" modal><i class="small material-icons">edit</i></a>
+				</div>
+				<div class="col m6">
+					<a data-target='deleteRxnEventModal' ng-click="getRxnEvent(item.id)" modal><i class="small material-icons">delete</i></a>
+				</div>
+			</div>
 		</div>
 		<div class="col m8">
 			<div class="row">
@@ -49,19 +67,14 @@
   </div>
 </div>
 
-<!-- Add Rxn Event Modal (not in a modal yet) -->
+<!-- Add Rxn Event Modal -->
 <div id="addRxnEventModal" class="modal tallModal">
 	<div class="modal-content">
-		<div class="row">
-			<div class="col md12">
-				<p>{{currentRxn.ingestion}}</p>
-			</div>
-		</div>
 		<div class="row">
 			<div class="rxnDetail">
 				<div class="row">
 					<div class="col m6">
-						<label for="inputCreated">Start date</label>
+						<label for="inputCreated">Date</label>
 						<input input-date
 					    type="text"
 					    name="created"
@@ -140,10 +153,70 @@
 	</div>
 	<div class="modal-footer">
   <a href="#!/rxnDetail/{{rxnId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addRxnEvent()">Add Reaction Event</a>
+	</div>
+</div>
+
+<!-- Edit Rxn Event Modal -->
+<div id="editRxnEventModal" class="modal tallModal">
+	<div class="modal-content">
+		<div class="row">
+			<div class="rxnDetail">
+				<div class="row">
+					<div class="col m12">
+						<div input-field>
+					    <select class="" ng-model="currentEvent.type" material-select watch>
+					      <option>Acute</option>
+					      <option>Chronic</option>
+					    </select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col m6">
+						<label for="input_starttime">Time</label>
+						<input id="input_starttime" input-clock data-twelvehour="false" type="text" ng-model="currentEvent.time">
+					</div>
+					<div class="col m6">
+						<div input-field class="col s12">
+			        <select class="" ng-model="currentEvent.severity" material-select watch>
+			          <option value="low">Low</option>
+			          <option value="medium">Medium</option>
+			          <option value="high">High</option>
+			        </select>
+			        <label>Severity</label>
+			      </div>
+					</div>
+				</div>
+				<div class="row">
+					<div input-field class="col m12">
+		        <select class="" ng-model="currentEvent.symptom" material-select multiple watch>
+		          <option value="Vomiting">Vomiting</option>
+		          <option value="Diarrhea">Diarrhea</option>
+		          <option value="Lethargy">Lethargy</option>
+		          <option value="Pallor">Pallor</option>
+		          <option value="Abdominal Distension">Abdominal Distension</option>
+		          <option value="Low Blood Pressure">Low Blood Pressure</option>
+		          <option value="Low Body Temperature">Low Body Temperature</option>
+		          <option value="Shock">Shock</option>
+		        </select>
+		        <label>Symptoms</label>
+		      </div>
+		    </div>
+		    <div class="row">
+		      <div input-field class="col m12">
+				    <textarea ng-model="currentEvent.description" class="materialize-textarea"></textarea>
+				    <label>Comments</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+  <a href="#!/rxnDetail/{{rxnId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editRxnEvent(currentEvent.id, currentEvent)">Edit Reaction Event</a>
 </div>
 </div>
 
-<!-- Delete Trigger Modal -->
+<!-- End Reaction Modal -->
 <div id="endRxnEventModal" class="modal tallModal">
   <div class="modal-content">
     <div class="row">
@@ -185,5 +258,19 @@
   </div>
   <div class="modal-footer">
     <a href="#!/rxnDetail/{{rxnId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="endRxn()">End Reaction</a>
+  </div>
+</div>
+
+<!-- Delete Reaction Event Modal -->
+<div id="deleteRxnEventModal" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <div input-field class="col s12">
+        <p>Are you sure you want to this event?</p>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!/rxnDetail/{{rxnId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteRxnEvent(currentEvent.id)">Delete Event</a>
   </div>
 </div>
