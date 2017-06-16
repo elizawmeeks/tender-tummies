@@ -1,6 +1,6 @@
 "use strict";
 
-app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
+app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
 
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
@@ -34,12 +34,21 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
   	});
   };
 
-  // Pulls one triggers and sets them as $scope.currentTrigger
+  // Pulls one trigger and sets them as $scope.currentTrigger to display trigger details in a modal.
   $scope.getTrigger = (triggerId) => {
-  	TriggerFactory.getTrigger(triggerId)
-  	.then( response => {
-  		$scope.currentTrigger = response;
-  	});
+  	let p1 = TriggerFactory.getTrigger(triggerId),
+        p2 = RxnFactory.getRxnsByTrigger(triggerId);
+    Promise.all([p1,p2])
+    .then( values => {
+  		$scope.currentTrigger = values[0];
+      $scope.rxnArray = [];
+      for (let thing in values[1]){
+        $scope.rxnArray.push(values[1][thing]);
+      }     
+    });
+
+
+
   };
 
   // Edits trigger object from the modal window

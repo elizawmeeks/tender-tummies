@@ -33,9 +33,20 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   };
 
   $scope.addRxnEvent = () => {
-  	console.log("$scope.rxn_event", $scope.rxn_event);
-  	RxnFactory.addRxnEvent($scope.rxn_event);
-  	$scope.getRxnEvents();
+  	RxnFactory.addRxnEvent($scope.rxn_event)
+    .then( response => {
+      $scope.getRxnEvents();
+    });
+  	
+  };
+
+  $scope.getRxnEvent = (eventId) => {
+    RxnFactory.getRxnEvent(eventId)
+    .then( response => {
+      let dateArray = response.date.split(" ");
+      console.log(dateArray);
+      $scope.currentEvent = response;
+    });
   };
 
   	// Initialization for the date picker
@@ -71,12 +82,30 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	//     console.log('onStop');
 	// };
 
+  $scope.editRxnEvent = ( eventId, eventObj ) => {
+    console.log(eventObj);
+    RxnFactory.editRxnEvent( eventId, eventObj )
+    .then( () => {
+      $scope.getRxnEvents();
+    });
+
+  };
+
+  // Deletes rxn objects from firebase
+  $scope.deleteRxnEvent = (eventId) => {
+    RxnFactory.deleteRxnEvent(eventId)
+    .then( response => {
+      $scope.getRxnEvents();
+    });
+  };
+
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
   		// console.log("response", response);
   		$scope.rxnEvents = [];
   		for (let value in response){
+        // Turning the date from dd/mm/yyyy to 4 Jun, 2017 format.
   			let dateArray = response[value].date.split("/");
   			console.log("dateArray", dateArray);
   			let mon = dateArray[1];

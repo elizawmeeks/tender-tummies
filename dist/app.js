@@ -344,9 +344,20 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   };
 
   $scope.addRxnEvent = () => {
-  	console.log("$scope.rxn_event", $scope.rxn_event);
-  	RxnFactory.addRxnEvent($scope.rxn_event);
-  	$scope.getRxnEvents();
+  	RxnFactory.addRxnEvent($scope.rxn_event)
+    .then( response => {
+      $scope.getRxnEvents();
+    });
+  	
+  };
+
+  $scope.getRxnEvent = (eventId) => {
+    RxnFactory.getRxnEvent(eventId)
+    .then( response => {
+      let dateArray = response.date.split(" ");
+      console.log(dateArray);
+      $scope.currentEvent = response;
+    });
   };
 
   	// Initialization for the date picker
@@ -382,12 +393,30 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	//     console.log('onStop');
 	// };
 
+  $scope.editRxnEvent = ( eventId, eventObj ) => {
+    console.log(eventObj);
+    RxnFactory.editRxnEvent( eventId, eventObj )
+    .then( () => {
+      $scope.getRxnEvents();
+    });
+
+  };
+
+  // Deletes rxn objects from firebase
+  $scope.deleteRxnEvent = (eventId) => {
+    RxnFactory.deleteRxnEvent(eventId)
+    .then( response => {
+      $scope.getRxnEvents();
+    });
+  };
+
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
   		// console.log("response", response);
   		$scope.rxnEvents = [];
   		for (let value in response){
+        // Turning the date from dd/mm/yyyy to 4 Jun, 2017 format.
   			let dateArray = response[value].date.split("/");
   			console.log("dateArray", dateArray);
   			let mon = dateArray[1];
@@ -515,7 +544,7 @@ app.controller("TrialDetailCtrl", function($scope){
 
 "use strict";
 
-app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
+app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
 
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
@@ -549,12 +578,21 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory){
   	});
   };
 
-  // Pulls one triggers and sets them as $scope.currentTrigger
+  // Pulls one trigger and sets them as $scope.currentTrigger to display trigger details in a modal.
   $scope.getTrigger = (triggerId) => {
-  	TriggerFactory.getTrigger(triggerId)
-  	.then( response => {
-  		$scope.currentTrigger = response;
-  	});
+  	let p1 = TriggerFactory.getTrigger(triggerId),
+        p2 = RxnFactory.getRxnsByTrigger(triggerId);
+    Promise.all([p1,p2])
+    .then( values => {
+  		$scope.currentTrigger = values[0];
+      $scope.rxnArray = [];
+      for (let thing in values[1]){
+        $scope.rxnArray.push(values[1][thing]);
+      }     
+    });
+
+
+
   };
 
   // Edits trigger object from the modal window
@@ -718,6 +756,24 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	});
   };
 
+  // Gets all rxns associated with the child
+  const getRxnsByTrigger = ( triggerId ) => {
+    return $q( (resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="trigger_id"&equalTo="${triggerId}"`)
+      .then( response => {
+        let rxns = response.data;
+        console.log("getRxnsByTrigger response", rxns);
+        // Object.keys(rxns).forEach( key => {
+        //   rxns[key].id = key;
+        // });
+        resolve(rxns);
+      })
+      .catch( error => {
+        reject(error);
+      });
+    });
+  };
+
   // Gets all rxn events associated with the rxn
   const getRxnEvents = ( rxnId ) => {
   	return $q( (resolve, reject) => {
@@ -751,6 +807,21 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
     });
   };
 
+  // Get one rxn to populate edit modal and delete modal
+  const getRxnEvent = ( eventId ) => {
+    return $q((resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/rxn_event/${eventId}.json`)
+          .then((response) => {
+            let rxn = response.data;
+            rxn.id = eventId;
+              resolve(rxn);
+          })
+          .catch((error) => {
+              reject(error);
+          });
+    });
+  };
+
   // Edit rxn object
   const editRxn = ( rxnID, rxnObj ) => {
   	let changedObj = JSON.stringify(rxnObj);
@@ -763,6 +834,20 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
     		reject(error);
     	});
   	});
+  };
+
+  // Edit rxn event object
+  const editRxnEvent = ( eventID, eventObj ) => {
+    let changedObj = JSON.stringify(eventObj);
+    return $q( (resolve, reject) => {
+      $http.patch(`${fbcreds.databaseURL}/rxn_event/${eventID}.json`, changedObj)
+      .then( response => {
+        resolve(response);
+      })
+      .catch( error => {
+        reject(error);
+      });
+    });
   };
 
   // Delete rxn from database. Maybe they passed a failed food! Hooray! Grow out of that FPIES, baby!
@@ -778,6 +863,19 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
 		});
 	};
 
+  // Deletes Rxn Event
+  const deleteRxnEvent = ( eventId ) => {
+    return $q( (resolve, reject) => {
+      $http.delete(`${fbcreds.databaseURL}/rxn_event/${eventId}.json`)
+      .then( response => {
+        resolve(response);
+      })
+      .catch( error => {
+        reject(error);
+      });
+    });
+  };
+
   return {
   	addRxn,
   	getRxns,
@@ -785,7 +883,11 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
   	editRxn,
   	deleteRxn,
   	addRxnEvent,
-  	getRxnEvents
+  	getRxnEvents,
+    getRxnsByTrigger,
+    getRxnEvent,
+    editRxnEvent,
+    deleteRxnEvent
   };
 
 });

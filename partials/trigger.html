@@ -141,7 +141,12 @@
     </div>
     <div>
       <h5>Associated Reactions:</h5>
-      <span>Reaction List here</span >
+      <span ng-repeat="thing in rxnArray">
+        <a ng-href="#!/rxnDetail/{{thing.id}}" class="modal-action modal-close">
+          {{thing.food_type}}
+        </a>
+         | 
+      </span >
     </div>
   </div>
   <div class="modal-footer">
