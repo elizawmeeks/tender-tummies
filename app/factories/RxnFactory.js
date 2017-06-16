@@ -55,9 +55,9 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
       .then( response => {
         let rxns = response.data;
         console.log("getRxnsByTrigger response", rxns);
-        // Object.keys(rxns).forEach( key => {
-        //   rxns[key].id = key;
-        // });
+        Object.keys(rxns).forEach( key => {
+          rxns[key].id = key;
+        });
         resolve(rxns);
       })
       .catch( error => {

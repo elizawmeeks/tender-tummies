@@ -43,10 +43,12 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       for (let thing in values[1]){
         $scope.rxnArray.push(values[1][thing]);
       }     
+      console.log("rxn Array, triggersCtrl", $scope.rxnArray);
     });
+  };
 
-
-
+  $scope.removeOverlay = () => {
+    $(".modal-overlay").remove();
   };
 
   // Edits trigger object from the modal window

@@ -534,10 +534,12 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       for (let thing in values[1]){
         $scope.rxnArray.push(values[1][thing]);
       }     
+      console.log("rxn Array, triggersCtrl", $scope.rxnArray);
     });
+  };
 
-
-
+  $scope.removeOverlay = () => {
+    $(".modal-overlay").remove();
   };
 
   // Edits trigger object from the modal window
@@ -708,9 +710,9 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
       .then( response => {
         let rxns = response.data;
         console.log("getRxnsByTrigger response", rxns);
-        // Object.keys(rxns).forEach( key => {
-        //   rxns[key].id = key;
-        // });
+        Object.keys(rxns).forEach( key => {
+          rxns[key].id = key;
+        });
         resolve(rxns);
       })
       .catch( error => {
