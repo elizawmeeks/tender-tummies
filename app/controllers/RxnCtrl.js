@@ -42,7 +42,7 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
   // Adds reaction to firebase
   $scope.addRxn = () => {
-  	RxnFactory.addRxn($scope.rxn)
+    RxnFactory.addRxn($scope.rxn)
   	.then( response => {
   		$scope.getRxns();
   	});

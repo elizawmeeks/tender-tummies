@@ -4,6 +4,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 
 	let childId = $rootScope.currentChildId;
 	$scope.rxnId = $routeParams.rxnId;
+  $rootScope.view = "Trial Detail";
 
   $scope.rxn_event = {
   	rxn_id: $scope.rxnId,
