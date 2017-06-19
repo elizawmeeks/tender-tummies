@@ -40,9 +40,18 @@ input.data-list-input[type=text]:focus:not([readonly]) {
   border-bottom: none;
   box-shadow: 0 0 0; }
 
+.dropdown-content {
+  background-color: #b2e8e3; }
+
+.dropdown-content li > a {
+  color: #003366; }
+
 .event {
   background-color: #b2e8e3;
   border-radius: 15px; }
+
+.chooseChild {
+  margin-top: 100px; }
 
 body {
   background-color: #91d8d3;
