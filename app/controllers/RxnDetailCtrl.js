@@ -82,16 +82,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
-  		$scope.rxnEvents = [];
-  		for (let value in response){
-        // Turning the date from dd/mm/yyyy to 4 Jun, 2017 format.
-  			let dateArray = response[value].date.split("/");
-  			let mon = dateArray[1];
-  			let month = $scope.monthShort[mon-1];
-  			let newDate = `${month} ${dateArray[0]}, ${dateArray[2]}`;
-  			response[value].date = newDate;
-  			$scope.rxnEvents.push(response[value]);
-  		}
+  		$scope.rxnEvents = response;
   	});
   };
 

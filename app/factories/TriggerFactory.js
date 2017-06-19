@@ -21,7 +21,6 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
   	return $q( (resolve, reject) => {
   		$http.get(`${fbcreds.databaseURL}/trigger.json?orderBy="cid"&equalTo="${childId}"`)
   		.then( response => {
-  			console.log("response", response);
   			let triggers = response.data;
   			Object.keys(triggers).forEach( key => {
   				triggers[key].id = key;

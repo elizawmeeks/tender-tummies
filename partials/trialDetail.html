@@ -1,0 +1,76 @@
+<!-- Adding stuff buttons -->
+<div class="container">
+	<div class="row">
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnEventModal' modal>Add Trial Meal</a>
+    </div>
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnEventModal' modal>Add Reaction</a>
+    </div>
+    <div class="col m4">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endRxnEventModal' modal>End Trial</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col m6">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endRxnEventModal' modal>Add Safe</a>
+    </div>
+    <div class="col m6">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endRxnEventModal' modal>Add Trigger</a>
+    </div>
+  </div>
+  <div class="row">
+  	<div class="col m6">
+  		Start Date: {{currentTrial.start_date}}
+  	</div>
+  	<div class=" colm6" ng-show="currentTrial.end_date">
+  		End date: {{currentTrial.end_date}}
+  	</div>
+  </div>
+
+	<!-- Trial Event List -->
+
+</div>
+
+<!-- Add Trial Event Modal -->
+<div id="addTrialEventModal" class="modal tallModal">
+	<div class="modal-content">
+		<div class="row">
+			<div class="rxnDetail">
+				<div class="row">
+					<div class="col m6">
+						<label for="inputCreated">Date</label>
+						<input input-date
+					    type="text"
+					    name="created"
+					    id="inputCreated"
+					    ng-model="trial_event.date"/>
+					</div>
+					<div class="col m6">
+						<label for="input_starttime">Time</label>
+						<input id="input_starttime" input-clock data-twelvehour="false" type="text" ng-model="trial_event.time">
+					</div>
+				</div>
+				<div class="row">
+					<div input-field class="col m6">
+				    <input type="text" ng-model="trial_event.food_type" placeholder="Almond Milk">
+				    <label>Food Type</label>
+					</div>
+					<div input-field class="col m6">
+				    <input type="text" ng-model="trial_event.quantity" placeholder="1/4 Cup">
+				    <label>Food Type</label>
+					</div>
+				</div>
+				<div class="row">
+		      <div input-field class="col m12">
+				    <textarea ng-model="trial.description" class="materialize-textarea"></textarea>
+				    <label>Comments</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+  <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addTrialEvent()">Add Trial Meal</a>
+	</div>
+</div>

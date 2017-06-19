@@ -1,4 +1,4 @@
-<!-- Add Reaction Modal -->
+<!-- Add Reaction Button -->
 <div class="container">
   <div class="row">
     <div class="col m4">
@@ -6,7 +6,7 @@
     </div>
   </div>
 
-<!-- Rxn List, including modal triggers for edit, delete, and detail -->
+  <!-- Rxn List, including modal triggers for edit, delete, and detail -->
 	<div class="row" ng-repeat="item in RxnFoods">
     <div class="col m2">
       <a class="waves-effect waves-teal btn-flat"  data-target='editRxnModal' ng-click="getRxn( item.id )" modal><i class="material-icons">mode_edit</i></a>
@@ -18,7 +18,7 @@
       <a href="#!/rxnDetail/{{item.id}}"><h2>{{item.food}}</h2></a>
     </div>
     <div class="col m4">
-      <a ng-click="getTrigger( item.id )"><p>{{item.start_date}}</p></a>
+      <p>{{item.start_date}}</p>
     </div>
   </div>
 </div>
@@ -34,28 +34,7 @@
 			    type="text"
 			    name="created"
 			    id="inputCreated"
-			    ng-model="rxn.start_date"
-			    container=""
-			    format="dd/mm/yyyy"
-			    months-full="{{ month }}"
-			    months-short="{{ monthShort }}"
-			    weekdays-full="{{ weekdaysFull }}"
-			    weekdays-short="{{ weekdaysShort }}"
-			    weekdays-letter="{{ weekdaysLetter }}"
-			    disable="disable"
-			    min="{{ minDate }}"
-			    max="{{ maxDate }}"
-			    today="today"
-			    first-day="1"
-			    clear="clear"
-			    close="close"
-			    select-years="15"
-			    on-start="onStart()"
-			    on-render="onRender()"
-			    on-open="onOpen()"
-			    on-close="onClose()"
-			    on-set="onSet()"
-			    on-stop="onStop()" />
+			    ng-model="rxn.start_date"/>
 			</div>
     </div>
     <div class="row">
@@ -103,28 +82,7 @@
 			    type="text"
 			    name="created"
 			    id="inputCreated"
-			    ng-model="currentRxn.start_date"
-			    container=""
-			    format="dd/mm/yyyy"
-			    months-full="{{ month }}"
-			    months-short="{{ monthShort }}"
-			    weekdays-full="{{ weekdaysFull }}"
-			    weekdays-short="{{ weekdaysShort }}"
-			    weekdays-letter="{{ weekdaysLetter }}"
-			    disable="disable"
-			    min="{{ minDate }}"
-			    max="{{ maxDate }}"
-			    today="today"
-			    first-day="1"
-			    clear="clear"
-			    close="close"
-			    select-years="15"
-			    on-start="onStart()"
-			    on-render="onRender()"
-			    on-open="onOpen()"
-			    on-close="onClose()"
-			    on-set="onSet()"
-			    on-stop="onStop()" />
+			    ng-model="currentRxn.start_date"/>
 			</div>
     </div>
     <div class="row">
@@ -161,7 +119,7 @@
   </div>
 </div>
 
-<!-- Delete Trigger Modal -->
+<!-- Delete Rxn Modal -->
 <div id="deleteRxnModal" class="modal">
   <div class="modal-content">
     <div class="row">
