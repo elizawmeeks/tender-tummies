@@ -7,15 +7,13 @@
   </div>
 
 <!-- Trigger List, including modal triggers for edit, delete, and detail -->
-<div class="row" ng-repeat="item in triggerList">
-    <div class="col m2">
-      <a class="waves-effect waves-teal btn-flat"  data-target='editTriggerModal' ng-click="getTrigger( item.id )" modal><i class="material-icons">mode_edit</i></a>
-    </div>
-    <div class="col m2">
-      <a class="waves-effect waves-teal btn-flat"  data-target='deleteTriggerModal' ng-click="getTrigger( item.id )" modal><i class="material-icons">delete</i></a>
+<div class="row" ng-repeat="item in triggerList | orderBy: 'food'">
+    <div class="col m2 offset-m2">
+      <a class="waves-effect waves-yellow lighten-4 btn-flat"  data-target='editTriggerModal' ng-click="getTrigger( item.id )" modal><i class="material-icons">mode_edit</i></a>
+      <a class="waves-effect waves-yellow lighten-4 btn-flat"  data-target='deleteTriggerModal' ng-click="getTrigger( item.id )" modal><i class="material-icons">delete</i></a>
     </div>
     <div class="col m8">
-      <a data-target="triggerDetailModal" ng-click="getTrigger( item.id )" modal><h2>{{item.food}}</h2></a>
+      <a data-target="triggerDetailModal" ng-click="getTrigger( item.id )" modal><h4>{{item.food}}</h4></a>
     </div>
   </div>
 </div>

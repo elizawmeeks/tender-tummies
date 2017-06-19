@@ -1323,10 +1323,12 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
   		$http.get(`${fbcreds.databaseURL}/trigger.json?orderBy="cid"&equalTo="${childId}"`)
   		.then( response => {
   			let triggers = response.data;
+        let triggerArray = [];
   			Object.keys(triggers).forEach( key => {
   				triggers[key].id = key;
+          triggerArray.push(triggers[key]);
   			});
-  			resolve(triggers);
+  			resolve(triggerArray);
   		})
   		.catch( error => {
   			reject(error);

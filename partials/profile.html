@@ -1,19 +1,20 @@
 <!-- Profile -->
-<div class="container profileContainer">
-	<div class="row">
-		<div class="col m12 right-align">
-			<!-- Edit/Delete Dropdown Trigger -->
-			<a class='dropdown-button btn-flat' href='javascript:void(0);' data-activates='demoDropdown' dropdown data-hover="true">
-			  <i class="material-icons">list</i>
-			</a>
+<div class="row">
+	<div class="col m12 right-align profileView">
+		<!-- Edit/Delete Dropdown Trigger -->
+		<a class='dropdown-button btn-flat' href='javascript:void(0);' data-activates='demoDropdown' dropdown data-hover="true">
+		  <i class="material-icons">list</i>
+		</a>
 
-			<!-- Dropdown Structure -->
-			<ul id='demoDropdown' class='dropdown-content'>
-		    <li class='center-align'><a data-target='editChildModal' modal><i class="small material-icons">mode_edit</i></a></li>
-		    <li><a data-target='deleteChildModal' modal><i class="small material-icons">delete</i></a></li>
-			</ul>
-		</div>
+		<!-- Dropdown Structure -->
+		<ul id='demoDropdown' class='dropdown-content'>
+	    <li class='center-align'><a data-target='editChildModal' modal><i class="small material-icons">mode_edit</i></a></li>
+	    <li><a data-target='deleteChildModal' modal><i class="small material-icons">delete</i></a></li>
+		</ul>
 	</div>
+</div>
+
+<div class="container profileContainer">
 	<div class="row">
 		<div class="col m4 offset-m4 center-align">
 			<h2>{{child.name}}</h2>
@@ -74,7 +75,7 @@
 		      <option value="" disabled>Choose your option</option>
 		      <option value="boy">Boy</option>
 		      <option value="girl">Girl</option>
-		      <option value="other"><input type="text"></option>
+		      <option value="">Other</option>
 		      <option value="">Prefer Not to Answer</option>
 		    </select>
 		    <label>Gender</label>
