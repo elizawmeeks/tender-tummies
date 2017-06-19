@@ -42,13 +42,11 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 		.then( stuff => {
 			$scope.getChildren();
 		});
-		console.log("ChildObj $scope.child", $scope.newChild);
 	};
 
 	$scope.getChildren = () => {
 		ChildFactory.getChildren()
 		.then( childrenObj => {
-			console.log("childrenObj", childrenObj);
 			$scope.children = childrenObj;
 		});
 	};

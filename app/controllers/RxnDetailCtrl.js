@@ -4,6 +4,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 
 	let childId = $rootScope.currentChildId;
 	$scope.rxnId = $routeParams.rxnId;
+  $rootScope.view = "Trial Detail";
 
   $scope.rxn_event = {
   	rxn_id: $scope.rxnId,
@@ -15,6 +16,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	time: ""
   };
 
+  // Gets the current reaction to set the view, and put reaction details at the top.
   $scope.getRxn = () => {
   	RxnFactory.getRxn($scope.rxnId)
   	.then( response => {
@@ -26,7 +28,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   		}
 	  	TriggerFactory.getTrigger(response.trigger_id)
 	  	.then( response => {
-	  		// $scope.trigger = response;
+	  		$scope.food = response.food;
 	  		$rootScope.view = response.food + " Reaction";
   		});
   	});
@@ -43,8 +45,6 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   $scope.getRxnEvent = (eventId) => {
     RxnFactory.getRxnEvent(eventId)
     .then( response => {
-      let dateArray = response.date.split(" ");
-      console.log(dateArray);
       $scope.currentEvent = response;
     });
   };
@@ -63,27 +63,8 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	// $scope.onStart = function () {
-	//     console.log('onStart');
-	// };
-	// $scope.onRender = function () {
-	//     console.log('onRender');
-	// };
-	// $scope.onOpen = function () {
-	//     console.log('onOpen');
-	// };
-	// $scope.onClose = function () {
-	//     console.log('onClose');
-	// };
-	// $scope.onSet = function () {
-	//     console.log('onSet');
-	// };
-	// $scope.onStop = function () {
-	//     console.log('onStop');
-	// };
 
   $scope.editRxnEvent = ( eventId, eventObj ) => {
-    console.log(eventObj);
     RxnFactory.editRxnEvent( eventId, eventObj )
     .then( () => {
       $scope.getRxnEvents();
@@ -102,26 +83,13 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
-  		// console.log("response", response);
-  		$scope.rxnEvents = [];
-  		for (let value in response){
-        // Turning the date from dd/mm/yyyy to 4 Jun, 2017 format.
-  			let dateArray = response[value].date.split("/");
-  			console.log("dateArray", dateArray);
-  			let mon = dateArray[1];
-  			let month = $scope.monthShort[mon-1];
-  			let newDate = `${month} ${dateArray[0]}, ${dateArray[2]}`;
-  			response[value].date = newDate;
-  			$scope.rxnEvents.push(response[value]);
-  		}
-  		console.log("$scope.rxnEvents", $scope.rxnEvents);
+  		$scope.rxnEvents = response;
   	});
   };
 
   $scope.endRxn = () => {
   	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
   	.then( response => {
-  		console.log("end rxn response", response);
   		loadPage();
   	});
   };

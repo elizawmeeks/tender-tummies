@@ -18,7 +18,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 
   // Add trigger from the trigger modal
   $scope.addTrigger = () => {
-  	console.log("$scope.trigger", $scope.trigger);
   	TriggerFactory.addTrigger( $scope.trigger )
   	.then ( response => {
   		$scope.getTriggers();
@@ -29,7 +28,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
   $scope.getTriggers = () => {
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
-  		console.log(response);
   		$scope.triggerList = response;
   	});
   };
@@ -45,10 +43,12 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       for (let thing in values[1]){
         $scope.rxnArray.push(values[1][thing]);
       }     
+      console.log("rxn Array, triggersCtrl", $scope.rxnArray);
     });
+  };
 
-
-
+  $scope.removeOverlay = () => {
+    $(".modal-overlay").remove();
   };
 
   // Edits trigger object from the modal window

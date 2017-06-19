@@ -142,7 +142,7 @@
     <div>
       <h5>Associated Reactions:</h5>
       <span ng-repeat="thing in rxnArray">
-        <a ng-href="#!/rxnDetail/{{thing.id}}" class="modal-action modal-close">
+        <a href="#!/rxnDetail/{{thing.id}}" class="modal-action modal-close" ng-click="removeOverlay()">
           {{thing.food_type}}
         </a>
          | 

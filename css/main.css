@@ -11,8 +11,11 @@
   width: 300px; }
 
 .heartLogo {
-  height: 75px;
-  margin: 25px 0 0 50px; }
+  height: 100px;
+  margin: 50px 0 0 90px; }
+
+.titleInNav {
+  margin-top: 0; }
 
 .modal-content .row {
   margin: 0; }
@@ -37,7 +40,7 @@ input.data-list-input[type=text]:focus:not([readonly]) {
   border-bottom: none;
   box-shadow: 0 0 0; }
 
-.rxnEvent {
+.event {
   background-color: #b2e8e3;
   border-radius: 15px; }
 
@@ -45,6 +48,9 @@ body {
   background-color: #91d8d3;
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
   min-height: 100vh;
+  color: #003366; }
+
+body a {
   color: #003366; }
 
 .footer-copyright {

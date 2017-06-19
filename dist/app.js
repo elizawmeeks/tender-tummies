@@ -36,7 +36,7 @@ app.config( $routeProvider => {
         templateUrl: "partials/trial.html",
         controller: "TrialCtrl"
     })
-    .when("/trialDetail", {
+    .when("/trialDetail/:trialId", {
         templateUrl: "partials/trialDetail.html",
         controller: "TrialDetailCtrl"
     });
@@ -113,13 +113,11 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 		.then( stuff => {
 			$scope.getChildren();
 		});
-		console.log("ChildObj $scope.child", $scope.newChild);
 	};
 
 	$scope.getChildren = () => {
 		ChildFactory.getChildren()
 		.then( childrenObj => {
-			console.log("childrenObj", childrenObj);
 			$scope.children = childrenObj;
 		});
 	};
@@ -171,7 +169,6 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 	// Get safes and saves teh number of safes forthe profiles view.
 	SafeFactory.getSafes($scope.routeId)
 	.then( response => {
-		console.log("response", response);
 		let safeArray = [];
 		// Putting all of the nutrition arrays into one, nested array.
 		for (let element in response){
@@ -183,7 +180,6 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 	// Get triggers and saves the number of triggers for the profiles view.
 	TriggerFactory.getTriggers($scope.routeId)
   	.then( response => {
-  		console.log(response);
   		let triggerArray = [];
   		for (let element in response){
 				triggerArray.push(response[element]);
@@ -209,11 +205,10 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 		food_type: ""
 	};
 
-	// Pulls all Rxns and sets them as $scope.RxnList
+	// Pulls all Rxns and sets them as $scope.RxnFoods, an array for dispaly in the reaction view.
   $scope.getRxns = () => {
   	RxnFactory.getRxns(childId)
   	.then( response => {
-  		console.log("getRxns response", response);
   		$scope.RxnFoods = [];
   		let getTrigger = (triggerId, rxnObj) => {
   			TriggerFactory.getTrigger(triggerId)
@@ -225,11 +220,10 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
   		for (let value in response){
   			getTrigger(response[value].trigger_id, response[value]);
   		}
-  		console.log("RxnFoods", $scope.RxnFoods);
   	});
   };
 
-  // Pulls one rxn and sets it as $scope.currentRxn
+  // Pulls one rxn and sets it as $scope.currentRxn for editing and deleting.
   $scope.getRxn = (rxnId) => {
   	RxnFactory.getRxn(rxnId)
   	.then( response => {
@@ -239,8 +233,7 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
   // Adds reaction to firebase
   $scope.addRxn = () => {
-  	console.log("$scope.rxn", $scope.rxn);
-  	RxnFactory.addRxn($scope.rxn)
+    RxnFactory.addRxn($scope.rxn)
   	.then( response => {
   		$scope.getRxns();
   	});
@@ -251,7 +244,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
   		$scope.triggerList = response;
-  		console.log("$scope.triggerList", $scope.triggerList);
   	});
   };
 
@@ -288,24 +280,6 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	$scope.onStart = function () {
-	    console.log('onStart');
-	};
-	$scope.onRender = function () {
-	    console.log('onRender');
-	};
-	$scope.onOpen = function () {
-	    console.log('onOpen');
-	};
-	$scope.onClose = function () {
-	    console.log('onClose');
-	};
-	$scope.onSet = function () {
-	    console.log('onSet');
-	};
-	$scope.onStop = function () {
-	    console.log('onStop');
-	};
     
 });
 
@@ -315,6 +289,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 
 	let childId = $rootScope.currentChildId;
 	$scope.rxnId = $routeParams.rxnId;
+  $rootScope.view = "Trial Detail";
 
   $scope.rxn_event = {
   	rxn_id: $scope.rxnId,
@@ -326,6 +301,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	time: ""
   };
 
+  // Gets the current reaction to set the view, and put reaction details at the top.
   $scope.getRxn = () => {
   	RxnFactory.getRxn($scope.rxnId)
   	.then( response => {
@@ -337,7 +313,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   		}
 	  	TriggerFactory.getTrigger(response.trigger_id)
 	  	.then( response => {
-	  		// $scope.trigger = response;
+	  		$scope.food = response.food;
 	  		$rootScope.view = response.food + " Reaction";
   		});
   	});
@@ -354,8 +330,6 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   $scope.getRxnEvent = (eventId) => {
     RxnFactory.getRxnEvent(eventId)
     .then( response => {
-      let dateArray = response.date.split(" ");
-      console.log(dateArray);
       $scope.currentEvent = response;
     });
   };
@@ -374,27 +348,8 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	var days = 15;
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
-	// $scope.onStart = function () {
-	//     console.log('onStart');
-	// };
-	// $scope.onRender = function () {
-	//     console.log('onRender');
-	// };
-	// $scope.onOpen = function () {
-	//     console.log('onOpen');
-	// };
-	// $scope.onClose = function () {
-	//     console.log('onClose');
-	// };
-	// $scope.onSet = function () {
-	//     console.log('onSet');
-	// };
-	// $scope.onStop = function () {
-	//     console.log('onStop');
-	// };
 
   $scope.editRxnEvent = ( eventId, eventObj ) => {
-    console.log(eventObj);
     RxnFactory.editRxnEvent( eventId, eventObj )
     .then( () => {
       $scope.getRxnEvents();
@@ -413,26 +368,13 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
-  		// console.log("response", response);
-  		$scope.rxnEvents = [];
-  		for (let value in response){
-        // Turning the date from dd/mm/yyyy to 4 Jun, 2017 format.
-  			let dateArray = response[value].date.split("/");
-  			console.log("dateArray", dateArray);
-  			let mon = dateArray[1];
-  			let month = $scope.monthShort[mon-1];
-  			let newDate = `${month} ${dateArray[0]}, ${dateArray[2]}`;
-  			response[value].date = newDate;
-  			$scope.rxnEvents.push(response[value]);
-  		}
-  		console.log("$scope.rxnEvents", $scope.rxnEvents);
+  		$scope.rxnEvents = response;
   	});
   };
 
   $scope.endRxn = () => {
   	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
   	.then( response => {
-  		console.log("end rxn response", response);
   		loadPage();
   	});
   };
@@ -466,7 +408,6 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	$scope.getSafes = () => {
 		SafeFactory.getSafes(childId)
 		.then( response => {
-			console.log("response", response);
 			$scope.safeList = response;
 			let nutritionArray = [];
 			// Putting all of the nutrition arrays into one, nested array.
@@ -503,9 +444,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	$scope.getSafe = (safeId, safeObj) => {
     SafeFactory.getSafe(safeId)
     .then( response => {
-    	console.log("response", response);
     	$scope.currentSafe = response;
-    	console.log("$scope.currentSafe", $scope.currentSafe);
     });
 	};
 
@@ -530,16 +469,215 @@ app.controller("SplashCtrl", function($scope){
 
 "use strict";
 
-app.controller("TrialCtrl", function($scope){
+app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 
+	// Sets current child id into an easier to use, local, variable.
+	let childId = $rootScope.currentChildId;
+
+	$rootScope.view = "Trials";
+
+	$scope.newTrial = {
+		food: "",
+		start_date: "",
+		cid: childId
+	};
+
+	$scope.addTrial = () => {
+		TrialFactory.addTrial($scope.newTrial)
+		.then( response => {
+			$scope.getTrials();
+		});
+	};
+
+	// Get trials to populate the page
+	$scope.getTrials = () => {
+		TrialFactory.getTrials(childId)
+		.then( response => {
+			$scope.trials = response;
+		});
+	};
+
+	// Get one trial to populate the edit and delete modals.
+	$scope.getTrial = (trialId) => {
+		TrialFactory.getTrial(trialId)
+		.then( response => {
+			$scope.currentTrial = response;
+		});
+	};
+
+	// Edit trial
+	$scope.editTrial = (trialId, trialObj) => {
+		TrialFactory.editTrial(trialId, trialObj)
+		.then( response => {
+			$scope.getTrials();
+		});
+	};
+
+	// Delete trial
+	$scope.deleteTrial = (trialId) => {
+		TrialFactory.deleteTrial(trialId)
+		.then (response => {
+			$scope.getTrials();
+		});
+	};
+
+	$scope.getTrials();
     
 });
 
 "use strict";
 
-app.controller("TrialDetailCtrl", function($scope){
+app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, TrialFactory, TriggerFactory, SafeFactory, $routeParams){
 
-    
+	let childId = $rootScope.currentChildId;
+	$scope.trialId = $routeParams.trialId;
+
+	$scope.trial_event = {
+		trial_id: $scope.trialId,
+		quantity: "",
+		food_type: "",
+		description: "",
+		time: "",
+		date: ""
+	};
+
+	$scope.rxn = {
+		start_date: "",
+		ingestion: "",
+		cid: childId,
+		food_type: "",
+		trial_id: $scope.trialId
+	};
+
+	$scope.safe = {
+		food: "",
+		cid: childId,
+		nutrients: []
+	};
+
+	$scope.trigger = {
+  	food: "",
+  	cid: childId,
+  	chronic: [],
+  	acute: [],
+  	severity: "",
+  	nutrients: []
+  };
+
+	$scope.isRxn = false;
+	$scope.safeAdded = false;
+	$scope.triggerAdded = false;
+
+	$scope.getTrial = () => {
+		TrialFactory.getTrial($scope.trialId)
+		.then( response => {
+			$scope.currentTrial = response;
+	    $scope.rxn.food_type = $scope.currentTrial.food;
+			$rootScope.view = response.food + " Trial";
+		});
+	};
+
+	// Adds trial event to firebase
+	$scope.addTrialEvent = () => {
+		TrialFactory.addTrialEvent( $scope.trial_event)
+		.then( response => {
+			$scope.getTrialEvents();
+		});
+	};
+
+	// Adds reaction to firebase
+  $scope.addRxn = () => {
+    RxnFactory.addRxn($scope.rxn)
+    .then( response => {
+      $scope.getRxnsByTrial();
+    });
+  };
+
+  // Ends trial
+  $scope.endTrial = () => {
+  	TrialFactory.editTrial($scope.trialId, $scope.currentTrial)
+  	.then( response => {
+  		loadPage();
+  	});
+  };
+
+  // Edit trial event
+  $scope.editTrialEvent = (eventId, eventObj) => {
+  	TrialFactory.editTrialEvent(eventId, eventObj)
+  	.then( response => {
+  		$scope.getTrialEvents();
+  	});
+  };
+
+  // Gets trial events to load to the page.
+	$scope.getTrialEvents = () => {
+		TrialFactory.getTrialEvents($scope.trialId)
+		.then( response => {
+			$scope.trialEvents = response;
+		});
+	};
+
+	// Gets trial event to populate edit modal
+	$scope.getTrialEvent = (eventId) => {
+		TrialFactory.getTrialEvent(eventId)
+		.then( response => {
+			$scope.currentEvent = response;
+		});
+	};
+
+	// Get any logged reactions to display on the page.
+	$scope.getRxnsByTrial = () => {
+		RxnFactory.getRxnsByTrial($scope.trialId)
+		.then( response => {
+			$scope.rxnFood = response;
+			if ($scope.rxnFood.length > 0){
+				$scope.isRxn = true;
+			}
+			console.log("$scope.rxnFood", $scope.rxnFood);
+		});
+	};
+
+	// Delete Trial Events
+	$scope.deleteTrialEvent = (eventId) => {
+		TrialFactory.deleteTrialEvent(eventId)
+		.then( response => {
+			$scope.getTrialEvents();
+		});
+	};
+
+	// Add Trial food to safe list
+	$scope.addSafe = () => {
+		SafeFactory.addSafe($scope.safe)
+		.then( response => {
+			$scope.safeAdded = true;
+		});
+	};
+
+	// Add trial food to trigger list
+	$scope.addTrigger = () => {
+		let p1 = TriggerFactory.addTrigger($scope.trigger),
+				p2 = RxnFactory.getRxnsByTrial($scope.trialId);
+
+		Promise.all([p1, p2])
+		.then( values => {
+			$scope.triggerAdded = true;
+			console.log("values[0]", values[0]);
+			let id = values[0].data.name;
+			console.log("id", id);
+			values[1][0].trigger_id = id;
+			console.log("values[1][0]", values[1][0]);
+			RxnFactory.editRxn(values[1][0].id, values[1][0]);
+		});
+	};
+
+	let loadPage = () => {
+		$scope.getTrialEvents();
+		$scope.getTrial();
+		$scope.getRxnsByTrial();
+	};
+   
+	loadPage();
+
 });
 
 "use strict";
@@ -562,7 +700,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 
   // Add trigger from the trigger modal
   $scope.addTrigger = () => {
-  	console.log("$scope.trigger", $scope.trigger);
   	TriggerFactory.addTrigger( $scope.trigger )
   	.then ( response => {
   		$scope.getTriggers();
@@ -573,7 +710,6 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
   $scope.getTriggers = () => {
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
-  		console.log(response);
   		$scope.triggerList = response;
   	});
   };
@@ -589,10 +725,12 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       for (let thing in values[1]){
         $scope.rxnArray.push(values[1][thing]);
       }     
+      console.log("rxn Array, triggersCtrl", $scope.rxnArray);
     });
+  };
 
-
-
+  $scope.removeOverlay = () => {
+    $(".modal-overlay").remove();
   };
 
   // Edits trigger object from the modal window
@@ -763,10 +901,30 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
       .then( response => {
         let rxns = response.data;
         console.log("getRxnsByTrigger response", rxns);
-        // Object.keys(rxns).forEach( key => {
-        //   rxns[key].id = key;
-        // });
+        Object.keys(rxns).forEach( key => {
+          rxns[key].id = key;
+        });
         resolve(rxns);
+      })
+      .catch( error => {
+        reject(error);
+      });
+    });
+  };
+
+  // Gets all rxns associated with the child
+  const getRxnsByTrial = ( trialId ) => {
+    return $q( (resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="trial_id"&equalTo="${trialId}"`)
+      .then( response => {
+        let rxns = response.data;
+        let rxnArray = [];
+        console.log("getRxnsByTrial response", rxns);
+        Object.keys(rxns).forEach( key => {
+          rxns[key].id = key;
+          rxnArray.push(rxns[key]);
+        });
+        resolve(rxnArray);
       })
       .catch( error => {
         reject(error);
@@ -887,7 +1045,8 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
     getRxnsByTrigger,
     getRxnEvent,
     editRxnEvent,
-    deleteRxnEvent
+    deleteRxnEvent,
+    getRxnsByTrial
   };
 
 });
@@ -913,7 +1072,6 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     	return $q( (resolve, reject) => {
     		$http.get(`${fbcreds.databaseURL}/safe.json?orderBy="cid"&equalTo="${childId}"`)
     		.then( response => {
-    			console.log("response", response);
     			let safes = response.data;
     			Object.keys(safes).forEach( key => {
     				safes[key].id = key;
@@ -980,6 +1138,165 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
 "use strict";
 
 app.factory("TrialFactory", function($q, $http, fbcreds){
+
+  // Adds rxn to database
+  const addTrial = ( object ) => {
+  	return $q( (resolve, reject) => {
+  		let trialObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/trial.json`, trialObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Add Trial event to firebase.
+  const addTrialEvent = (object) => {
+  	return $q( (resolve, reject) => {
+  		let eventObj = JSON.stringify(object);
+  		$http.post(`${fbcreds.databaseURL}/trial_event.json`, eventObj)
+  		.then( response => {
+  			resolve(response);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Get trials from fb
+  const getTrials = ( childId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/trial.json?orderBy="cid"&equalTo="${childId}"`)
+  		.then( response => {
+  			let trials = response.data;
+  			Object.keys(trials).forEach( key => {
+  				trials[key].id = key;
+  			});
+  			resolve(trials);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Get Trial Events from fb
+  const getTrialEvents = ( trialId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/trial_event.json?orderBy="trial_id"&equalTo="${trialId}"`)
+  		.then( response => {
+  			let events = response.data;
+  			Object.keys(events).forEach( key => {
+  				events[key].id = key;
+  			});
+  			resolve(events);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Get Trial Event from fb to populate the edit modal
+  const getTrialEvent = ( eventId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/trial_event/${eventId}.json`)
+  		.then( response => {
+  			let event = response.data;
+  			event.id = eventId;
+  			resolve(event);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Get trials from fb
+  const getTrial = ( trialId ) => {
+  	return $q( (resolve, reject) => {
+  		$http.get(`${fbcreds.databaseURL}/trial/${trialId}.json`)
+  		.then( response => {
+  			let trial = response.data;
+  			trial.id = trialId;
+  			resolve(trial);
+  		})
+  		.catch( error => {
+  			reject(error);
+  		});
+  	});
+  };
+
+  // Edit trial object
+  const editTrial = ( trialID, trialObj ) => {
+  	let changedObj = JSON.stringify(trialObj);
+  	return $q( (resolve, reject) => {
+  		$http.patch(`${fbcreds.databaseURL}/trial/${trialID}.json`, changedObj)
+    	.then( response => {
+    		resolve(response);
+    	})
+    	.catch( error => {
+    		reject(error);
+    	});
+  	});
+  };
+
+  // Edit trial object
+  const editTrialEvent = ( eventID, eventObj ) => {
+  	let changedObj = JSON.stringify(eventObj);
+  	return $q( (resolve, reject) => {
+  		$http.patch(`${fbcreds.databaseURL}/trial_event/${eventID}.json`, changedObj)
+    	.then( response => {
+    		resolve(response);
+    	})
+    	.catch( error => {
+    		reject(error);
+    	});
+  	});
+  };
+
+  // Delete trial from database.
+  const deleteTrial = ( trialId ) => {
+		return $q( (resolve, reject) => {
+			$http.delete(`${fbcreds.databaseURL}/trial/${trialId}.json`)
+			.then( response => {
+				resolve(response);
+			})
+			.catch( error => {
+				reject(error);
+			});
+		});
+	};
+
+	// Delete trial from database.
+  const deleteTrialEvent = ( eventId ) => {
+		return $q( (resolve, reject) => {
+			$http.delete(`${fbcreds.databaseURL}/trial_event/${eventId}.json`)
+			.then( response => {
+				resolve(response);
+			})
+			.catch( error => {
+				reject(error);
+			});
+		});
+	};
+
+  return {
+  	addTrial,
+  	getTrials,
+  	getTrial,
+  	editTrial,
+  	deleteTrial,
+  	addTrialEvent,
+  	getTrialEvent,
+  	editTrialEvent,
+  	getTrialEvents,
+  	deleteTrialEvent
+  };
     
 });
 "use strict";
@@ -1005,7 +1322,6 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
   	return $q( (resolve, reject) => {
   		$http.get(`${fbcreds.databaseURL}/trigger.json?orderBy="cid"&equalTo="${childId}"`)
   		.then( response => {
-  			console.log("response", response);
   			let triggers = response.data;
   			Object.keys(triggers).forEach( key => {
   				triggers[key].id = key;

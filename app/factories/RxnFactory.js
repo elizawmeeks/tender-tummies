@@ -55,10 +55,30 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
       .then( response => {
         let rxns = response.data;
         console.log("getRxnsByTrigger response", rxns);
-        // Object.keys(rxns).forEach( key => {
-        //   rxns[key].id = key;
-        // });
+        Object.keys(rxns).forEach( key => {
+          rxns[key].id = key;
+        });
         resolve(rxns);
+      })
+      .catch( error => {
+        reject(error);
+      });
+    });
+  };
+
+  // Gets all rxns associated with the child
+  const getRxnsByTrial = ( trialId ) => {
+    return $q( (resolve, reject) => {
+      $http.get(`${fbcreds.databaseURL}/rxn.json?orderBy="trial_id"&equalTo="${trialId}"`)
+      .then( response => {
+        let rxns = response.data;
+        let rxnArray = [];
+        console.log("getRxnsByTrial response", rxns);
+        Object.keys(rxns).forEach( key => {
+          rxns[key].id = key;
+          rxnArray.push(rxns[key]);
+        });
+        resolve(rxnArray);
       })
       .catch( error => {
         reject(error);
@@ -179,7 +199,8 @@ app.factory("RxnFactory", function($q, $http, fbcreds){
     getRxnsByTrigger,
     getRxnEvent,
     editRxnEvent,
-    deleteRxnEvent
+    deleteRxnEvent,
+    getRxnsByTrial
   };
 
 });

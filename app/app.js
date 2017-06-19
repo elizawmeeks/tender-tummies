@@ -36,7 +36,7 @@ app.config( $routeProvider => {
         templateUrl: "partials/trial.html",
         controller: "TrialCtrl"
     })
-    .when("/trialDetail", {
+    .when("/trialDetail/:trialId", {
         templateUrl: "partials/trialDetail.html",
         controller: "TrialDetailCtrl"
     });
