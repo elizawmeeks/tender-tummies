@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Abel|Abril+Fatface");
 .side-nav {
   background-color: transparent; }
   .side-nav h1 {
@@ -60,7 +61,9 @@ body {
   background-color: #91d8d3;
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
   min-height: 100vh;
-  color: #003366; }
+  color: #003366;
+  font-family: "Abel", sans-serif;
+  font-size: 1.5em; }
 
 body a {
   color: #003366; }
@@ -69,6 +72,9 @@ body a {
   position: fixed;
   bottom: 0;
   right: 5px; }
+
+.specialFont {
+  font-family: 'Abril Fatface', sans-serif; }
 
 header, footer, main {
   padding-left: 300px; }
