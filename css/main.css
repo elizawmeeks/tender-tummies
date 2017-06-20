@@ -53,6 +53,9 @@ input.data-list-input[type=text]:focus:not([readonly]) {
 .chooseChild {
   margin-top: 100px; }
 
+.bottomBorder {
+  border-bottom: 1.5px solid #003366; }
+
 body {
   background-color: #91d8d3;
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);

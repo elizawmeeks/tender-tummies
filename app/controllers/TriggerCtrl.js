@@ -29,6 +29,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
   		$scope.triggerList = response;
+      console.log("$scope.triggerList",$scope.triggerList);
   	});
   };
 

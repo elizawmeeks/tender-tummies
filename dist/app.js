@@ -393,6 +393,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	$scope.selectedNutrient = "all";
 
 	// Sets nav title
 	$rootScope.view = "Safes";
@@ -403,6 +404,21 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		cid: childId,
 		nutrients: ""
 	};
+
+	// $scope.filterNutrients = () => {
+	// 	console.log("$scope.selectedNutrient", $scope.selectedNutrient);
+	// 	if ($scope.selectedNutrient === "all"){
+	// 		return $scope.safeList;
+	// 	} else {
+	// 		$scope.safeList.forEach( element => {
+	// 			element.nutrients.forEach( thing => {
+	// 				if (thing === $scope.selectedNutrient){
+	// 					return thing;
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// };
 
 	// Get safes, loads page.
 	$scope.getSafes = () => {
@@ -711,6 +727,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
   	TriggerFactory.getTriggers(childId)
   	.then( response => {
   		$scope.triggerList = response;
+      console.log("$scope.triggerList",$scope.triggerList);
   	});
   };
 
@@ -1072,11 +1089,13 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     	return $q( (resolve, reject) => {
     		$http.get(`${fbcreds.databaseURL}/safe.json?orderBy="cid"&equalTo="${childId}"`)
     		.then( response => {
-    			let safes = response.data;
+    			let safes = response.data,
+              safeArray = [];
     			Object.keys(safes).forEach( key => {
     				safes[key].id = key;
+            safeArray.push(safes[key]);
     			});
-    			resolve(safes);
+    			resolve(safeArray);
     		})
     		.catch( error => {
     			reject(error);
