@@ -1,6 +1,8 @@
 "use strict";
 
-app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
+app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFactory){
+
+	let user = UserFactory.getUser();
 
 	$scope.newChild = {
 		name: "",
@@ -8,6 +10,7 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 		wtNumber: "",
 		wtUnit: "",
 		gender: "",
+		uid: user
 	};
 
 	$rootScope.currentChild = null;
@@ -45,7 +48,7 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 	};
 
 	$scope.getChildren = () => {
-		ChildFactory.getChildren()
+		ChildFactory.getChildren(user)
 		.then( childrenObj => {
 			$scope.children = childrenObj;
 		});

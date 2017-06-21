@@ -2,43 +2,71 @@
 
 const app = angular.module("TenderTummies", ["ngRoute", 'ui.materialize']);
 
+let isAuth = (UserFactory) => {new Promise ( (resolve,reject) =>{
+    UserFactory.isAuthenticated()
+    .then((userExists)=>{
+        if(userExists){
+            console.log("Authenticated, go ahead");
+            resolve();
+        } else{
+            console.log("Authentication rejected");
+            reject();
+            }
+        });
+    });
+};
+
 app.config( $routeProvider => {
 	$routeProvider
 	.when("/", {
+        templateUrl: "partials/splash.html",
+        controller: "SplashCtrl",
+        resolve: {isAuth}
+    })
+    .when("/choose", {
 		templateUrl: "partials/chooseChild.html",
-		controller: "ChooseCtrl"
+		controller: "ChooseCtrl",
+        resolve: {isAuth}
 	})
 	.when("/splash", {
         templateUrl: "partials/splash.html",
-        controller: "SplashCtrl"
+        controller: "SplashCtrl",
+        resolve: {isAuth}
     })
     .when("/profile/:profileId", {
         templateUrl: "partials/profile.html",
-        controller: "ProfileCtrl"
+        controller: "ProfileCtrl",
+        resolve: {isAuth}
     })
     .when("/rxn", {
         templateUrl: "partials/rxn.html",
-        controller: "RxnCtrl"
+        controller: "RxnCtrl",
+        resolve: {isAuth}
     })
     .when("/rxnDetail/:rxnId", {
         templateUrl: "partials/rxnDetail.html",
-        controller: "RxnDetailCtrl"
+        controller: "RxnDetailCtrl",
+        resolve: {isAuth}
     })
     .when("/safe", {
         templateUrl: "partials/safe.html",
-        controller: "SafeCtrl"
+        controller: "SafeCtrl",
+        resolve: {isAuth}
     })
     .when("/trigger", {
         templateUrl: "partials/trigger.html",
-        controller: "TriggerCtrl"
+        controller: "TriggerCtrl",
+        resolve: {isAuth}
     })
     .when("/trial", {
         templateUrl: "partials/trial.html",
-        controller: "TrialCtrl"
+        controller: "TrialCtrl",
+        resolve: {isAuth}
     })
     .when("/trialDetail/:trialId", {
         templateUrl: "partials/trialDetail.html",
-        controller: "TrialDetailCtrl"
+        controller: "TrialDetailCtrl",
+        resolve: {isAuth}
     });
 });
 

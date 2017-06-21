@@ -2,43 +2,71 @@
 
 const app = angular.module("TenderTummies", ["ngRoute", 'ui.materialize']);
 
+let isAuth = (UserFactory) => {new Promise ( (resolve,reject) =>{
+    UserFactory.isAuthenticated()
+    .then((userExists)=>{
+        if(userExists){
+            console.log("Authenticated, go ahead");
+            resolve();
+        } else{
+            console.log("Authentication rejected");
+            reject();
+            }
+        });
+    });
+};
+
 app.config( $routeProvider => {
 	$routeProvider
 	.when("/", {
+        templateUrl: "partials/splash.html",
+        controller: "SplashCtrl",
+        resolve: {isAuth}
+    })
+    .when("/choose", {
 		templateUrl: "partials/chooseChild.html",
-		controller: "ChooseCtrl"
+		controller: "ChooseCtrl",
+        resolve: {isAuth}
 	})
 	.when("/splash", {
         templateUrl: "partials/splash.html",
-        controller: "SplashCtrl"
+        controller: "SplashCtrl",
+        resolve: {isAuth}
     })
     .when("/profile/:profileId", {
         templateUrl: "partials/profile.html",
-        controller: "ProfileCtrl"
+        controller: "ProfileCtrl",
+        resolve: {isAuth}
     })
     .when("/rxn", {
         templateUrl: "partials/rxn.html",
-        controller: "RxnCtrl"
+        controller: "RxnCtrl",
+        resolve: {isAuth}
     })
     .when("/rxnDetail/:rxnId", {
         templateUrl: "partials/rxnDetail.html",
-        controller: "RxnDetailCtrl"
+        controller: "RxnDetailCtrl",
+        resolve: {isAuth}
     })
     .when("/safe", {
         templateUrl: "partials/safe.html",
-        controller: "SafeCtrl"
+        controller: "SafeCtrl",
+        resolve: {isAuth}
     })
     .when("/trigger", {
         templateUrl: "partials/trigger.html",
-        controller: "TriggerCtrl"
+        controller: "TriggerCtrl",
+        resolve: {isAuth}
     })
     .when("/trial", {
         templateUrl: "partials/trial.html",
-        controller: "TrialCtrl"
+        controller: "TrialCtrl",
+        resolve: {isAuth}
     })
     .when("/trialDetail/:trialId", {
         templateUrl: "partials/trialDetail.html",
-        controller: "TrialDetailCtrl"
+        controller: "TrialDetailCtrl",
+        resolve: {isAuth}
     });
 });
 
@@ -71,7 +99,9 @@ $(document).ready(function() {
 
 "use strict";
 
-app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
+app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFactory){
+
+	let user = UserFactory.getUser();
 
 	$scope.newChild = {
 		name: "",
@@ -79,6 +109,7 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 		wtNumber: "",
 		wtUnit: "",
 		gender: "",
+		uid: user
 	};
 
 	$rootScope.currentChild = null;
@@ -116,7 +147,7 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope){
 	};
 
 	$scope.getChildren = () => {
-		ChildFactory.getChildren()
+		ChildFactory.getChildren(user)
 		.then( childrenObj => {
 			$scope.children = childrenObj;
 		});
@@ -478,9 +509,47 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 
 "use strict";
 
-app.controller("SplashCtrl", function($scope){
+app.controller("SplashCtrl", function($scope, $timeout, UserFactory, $location, $window){
 
-    
+	$scope.noUser = true;
+
+  let logout = () => {
+  	$scope.noUser = false;
+    UserFactory.logoutUser()
+      .then(function (data) {
+        //location is a service within angular
+		    console.log("logged out");
+        // $window.location.url = ("#!/");
+      }, function (error) {
+      });
+  };
+
+	if (UserFactory.isAuthenticated()) {
+    logout();
+    $scope.noUser = true;
+  }
+
+//When you choose to login with google
+	$scope.loginGoogle = () => {				
+		UserFactory.authWithProvider()
+			.then(
+				(userInfo) => {		  			
+					$scope.noUser = false;		
+  				$location.path('/choose');  					    				  						    			   
+  				$timeout(() => $location.path('/choose') );
+			}).catch(
+				(error) => {
+		    	// Handle the Errors.
+		    	console.log("error with google login", error);		    	
+		    	var errorCode = error.code;
+		    	var errorMessage = error.message;
+		    	// The email of the user's account used.
+		    	var email = error.email;
+		    	// The firebase.auth.AuthCredential type that was used.
+		    	var credential = error.credential;
+		  		// ...
+				});
+		};
 });
 
 "use strict";
@@ -786,9 +855,9 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
-	const getChildren = () => {
+	const getChildren = (userId) => {
 		return $q( (resolve, reject) => {
-			$http.get(`${fbcreds.databaseURL}/child.json`)
+			$http.get(`${fbcreds.databaseURL}/child.json?orderBy="uid"&equalTo="${userId}"`)
 			.then( childObj => {
 				let child = childObj.data;
 				Object.keys(child).forEach( key => {
@@ -1439,11 +1508,11 @@ app.factory("UserFactory", function($window){
 
   let provider = new firebase.auth.GoogleAuthProvider();
 
-  let loginWithGoogle= function(){
+  let authWithProvider= function(){
       return firebase.auth().signInWithPopup(provider);
   };
 
-  return {logoutUser, isAuthenticated, getUser, loginWithGoogle};
+  return {logoutUser, isAuthenticated, getUser, authWithProvider};
     
 });
 "use strict";
