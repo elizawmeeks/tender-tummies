@@ -1,22 +1,26 @@
+<header>
+  <div class="topLine"></div>
+  <div ng-include="'partials/navbar.html'"></div>
+</header>
 <!-- Profile -->
-<div class="row">
-	<div class="col m12 right-align profileView">
-		<!-- Edit/Delete Dropdown Trigger -->
-		<a class='dropdown-button btn-flat' href='javascript:void(0);' data-activates='demoDropdown' dropdown data-hover="true">
-		  <i class="material-icons">menu</i>
-		</a>
-
-		<!-- Dropdown Structure -->
-		<ul id='demoDropdown' class='dropdown-content'>
-	    <li class='center-align'><a data-target='editChildModal' modal><i class="small material-icons">mode_edit</i></a></li>
-	    <li><a data-target='deleteChildModal' modal><i class="small material-icons">delete</i></a></li>
-		</ul>
-	</div>
-</div>
-
 <div class="container profileContainer">
+	<div class="row" style="height:75px;"></div>
 	<div class="row">
-		<div class="col m12 center-align">
+		<div class="col m3 offset-m1 center-align">
+			<!-- Fixed Action Button -->
+      <div style="position: relative;">
+        <div class="fixed-action-btn horizontal"  style="position: static">
+          <a class="btn-floating white btn-large triggerBtn" style="position: absolute; right: 10px; top: 20px; background-color: #F8FF91;">
+            <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+          </a>
+          <ul style="position: absolute; right: 60px; top: 15px;">
+            <li><a class="btn-floating white" data-target='deleteChildModal' modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+            <li><a class="btn-floating white" data-target='editChildModal' modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col m8">
 			<h2 class="specialFont">{{child.name}}</h2>
 		</div>
 
@@ -39,7 +43,7 @@
 			<h4>{{numSafes}} Safe Foods</h4>
 		</div>
 	</div>
-
+</div>
 <!-- edit Child Modal -->
 <div id="editChildModal" class="modal">
   <div class="modal-content">

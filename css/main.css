@@ -80,7 +80,7 @@ body a:hover {
 .specialFont {
   font-family: 'Comfortaa', sans-serif; }
 
-header, footer, main {
+footer, main {
   padding-left: 300px; }
 
 .topLine {
@@ -92,4 +92,4 @@ header, footer, main {
   color: #003366; }
 
 .tallModal {
-  min-height: 400px; }
+  min-height: 500px; }
