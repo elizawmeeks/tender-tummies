@@ -30,10 +30,10 @@ app.factory("UserFactory", function($window){
 
   let provider = new firebase.auth.GoogleAuthProvider();
 
-  let loginWithGoogle= function(){
+  let authWithProvider= function(){
       return firebase.auth().signInWithPopup(provider);
   };
 
-  return {logoutUser, isAuthenticated, getUser, loginWithGoogle};
+  return {logoutUser, isAuthenticated, getUser, authWithProvider};
     
 });

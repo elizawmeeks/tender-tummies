@@ -80,7 +80,7 @@ body a:hover {
 .specialFont {
   font-family: 'Comfortaa', sans-serif; }
 
-footer, main {
+.pushMeOver {
   padding-left: 300px; }
 
 .topLine {
@@ -92,4 +92,22 @@ footer, main {
   color: #003366; }
 
 .tallModal {
-  min-height: 500px; }
+  min-height: 80%; }
+
+.splashRow {
+  height: 300px; }
+
+.splashLogo {
+  max-height: 300px; }
+
+.splashH1 {
+  font-size: 4em; }
+
+.splash {
+  margin-top: calc(50vh - 200px); }
+
+.moveModal {
+  height: 35px; }
+
+.picker__frame {
+  margin-top: -50px; }

@@ -15,9 +15,9 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
-	const getChildren = () => {
+	const getChildren = (userId) => {
 		return $q( (resolve, reject) => {
-			$http.get(`${fbcreds.databaseURL}/child.json`)
+			$http.get(`${fbcreds.databaseURL}/child.json?orderBy="uid"&equalTo="${userId}"`)
 			.then( childObj => {
 				let child = childObj.data;
 				Object.keys(child).forEach( key => {
