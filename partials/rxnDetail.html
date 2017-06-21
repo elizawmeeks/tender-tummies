@@ -1,23 +1,32 @@
+<header>
+  <div class="topLine"></div>
+  <div ng-include="'partials/navbar.html'"></div>
+</header>
 <div class="container">
+  <div class="row"></div>
 	<!-- Add Rxn Event Modal Trigger -->
-	<div class="row">
-    <div class="col m5">
+	<div class="row currentRxn">
+    <div class="col m6 center-align">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnEventModal' modal>Add Reaction Event</a>
     </div>
-    <div class="col m4">
+    <div class="col m6 center-align">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endRxnEventModal' modal>End Reaction</a>
     </div>
   </div>
 
-  <div class="row">
-		<div class="col md12">
-			<p>{{currentRxn.food_type}}</p>
-			<p>{{currentRxn.ingestion}}</p>
+  <div class="row currentRxn">
+		<div class="col m12 center-align">
+			<h2>{{currentRxn.food_type}}</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col md10 offset-m1">
+			<p>{{currentRxn.ingestion}} | <span ng-show="!currentRxn.end_date">Reaction began on </span>{{currentRxn.start_date}}<span ng-show="currentRxn.end_date"> - {{currentRxn.end_date}}</p>
 		</div>
 	</div>
 
   <div class="row" ng-show="rxnOver">
-  	<div class="col m10 offset-m1">
+  	<div class="col m12 center-align">
   		This {{food}} reaction is over.
   	</div>
   </div>
@@ -25,6 +34,7 @@
   <!-- Rxn Event List -->
 
   <div ng-repeat="item in rxnEvents" class="row event">
+  <div class="row"></div>
 		<div class="col m4">
 			<div class="row">
 				<div class="col m12">
@@ -32,13 +42,29 @@
 				</div>
 			</div>
 			<div class="row">
+	      <div class="col m12">
+	        <div style="position: relative;">
+	          <div class="fixed-action-btn horizontal"  style="position: static">
+	            <a class="btn-floating btn-large triggerBtn" style="position: absolute; right: 10px; top: 10px; background-color: #F8FF91;">
+	              <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+	            </a>
+	            <ul style="position: absolute; right: 60px; top: 5px;">
+	              <li><a class="btn-floating white" href="#!/rxnDetail/{{item.id}}"><i class="material-icons" style="color: #529e99;">info</i></a></li>
+	              <li><a class="btn-floating white" data-target='deleteRxnEventModal' ng-click="getRxnEvent(item.id)" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+	              <li><a class="btn-floating white" data-target='editRxnEventModal' ng-click="getRxnEvent(item.id)" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+	            </ul>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+			<!-- <div class="row">
 				<div class="col m6">
 					<a data-target='editRxnEventModal' ng-click="getRxnEvent(item.id)" modal><i class="small material-icons">edit</i></a>
 				</div>
 				<div class="col m6">
 					<a data-target='deleteRxnEventModal' ng-click="getRxnEvent(item.id)" modal><i class="small material-icons">delete</i></a>
 				</div>
-			</div>
+			</div> -->
 		</div>
 		<div class="col m8">
 			<div class="row">

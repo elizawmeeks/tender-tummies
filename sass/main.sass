@@ -2,36 +2,52 @@ $FPIES-lite: #b2e8e3
 $FPIES-med: #91d8d3
 $FPIES: #529e99
 $text: #003366
+$link: #004891
 $accent: #F8FF91
 
 @import navbar
 @import profile
 @import rxnDetail
+@import chooseChild
+@import trigger
+@import url('https://fonts.googleapis.com/css?family=Abel|Comfortaa:300');
 // Overall Styles
 body
 	background-color: $FPIES-med
 	background: linear-gradient(to bottom right, $FPIES-lite, $FPIES-med, $FPIES)
 	min-height: 100vh
 	color: $text
+	font-family: "Abel", sans-serif
+	font-size: 1.5em
 
 body a
 	color: $text
+	cursor: pointer
+
+body a:hover
+	color: $FPIES
 
 .footer-copyright
 	position: fixed
 	bottom: 0
 	right: 5px
 
-header, footer, main 
+.specialFont
+	font-family: 'Comfortaa', sans-serif;
+
+footer, main 
 	padding-left: 300px
+	
 	// Yellow line across the top of the page
 .topLine
 	background-color: $accent
 	height: 25px
 	width: calc(100vw - 300px)
+
 	// Class to overwrite default text color to what I want.
 .textColor
 	color: $text
+
 	// Making the modals tall enough for the select options
 .tallModal
-	min-height: 400px
+	min-height: 500px

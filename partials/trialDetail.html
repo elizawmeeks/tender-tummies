@@ -1,50 +1,60 @@
+<header>
+  <div class="topLine"></div>
+  <div ng-include="'partials/navbar.html'"></div>
+</header>
 <!-- Adding stuff buttons and general trial information -->
 <div class="container">
-	<div class="row">
-    <div class="col m4">
+  <div class="row"></div>
+	<div class="row currentRxn">
+    <div class="col m4 center-align">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTrialEventModal' modal>Add Trial Meal</a>
     </div>
-    <div class="col m4">
+    <div class="col m4 center-align">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnModal' modal>Add Reaction</a>
     </div>
-    <div class="col m4">
+    <div class="col m4 center-align">
       <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endTrialModal' modal>End Trial</a>
     </div>
   </div>
+
+	<!-- Start/end date -->
   <div class="row">
-    <div class="col m6">
-      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addSafeModal' modal>Add Safe</a>
+    <div class="col m12 center-align">
+      <h2>{{currentTrial.food}}</h2>
     </div>
-    <div class="col m6">
-      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTriggerModal' modal>Add Trigger</a>
+  </div>
+
+  <div class="row">
+    <div class="col m6 center-align">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addSafeModal' modal>Make {{currentTrial.food}} a Safe</a>
+    </div>
+    <div class="col m6 center-align">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTriggerModal' modal>Make {{currentTrial.food}} a Trigger</a>
     </div>
   </div>
 
   <!-- Trigger/Safe Added note -->
 
-	<div ng-show="safeAdded">
-		<div class="row">
-			<div class="col m12">
-				{{safe.food}} has been added to {{currentChild}}'s safe list.
-			</div>
-		</div>
-	</div>
+  <div ng-show="safeAdded">
+    <div class="row">
+      <div class="col m12">
+        {{safe.food}} has been added to {{currentChild}}'s safe list.
+      </div>
+    </div>
+  </div>
 
-	<div ng-show="triggerAdded">
-		<div class="row">
-			<div class="col m12">
-				{{trigger.food}} has been added to {{currentChild}}'s trigger list.
-			</div>
-		</div>
-	</div>
+  <div ng-show="triggerAdded">
+    <div class="row">
+      <div class="col m12">
+        {{trigger.food}} has been added to {{currentChild}}'s trigger list.
+      </div>
+    </div>
+  </div>
 
-	<!-- Start/end date -->
   <div class="row">
-  	<div class="col m6">
-  		Start Date: {{currentTrial.start_date}}
-  	</div>
-  	<div class=" colm6" ng-show="currentTrial.end_date">
-  		End date: {{currentTrial.end_date}}
+  	<div class="col m12 center-align">
+  		<span ng-show="!currentTrial.end_date">Trial began on: </span>{{currentTrial.start_date}} <span ng-show="currentTrial.end_date">- 
+  		{{currentTrial.end_date}}</span>
   	</div>
   </div>
 
@@ -54,35 +64,40 @@
 		<div class="row">
 			<div class="col m12">
 				Associated Reactions:
-			</div>
-		</div>
-		<div class="row" ng-repeat="item in rxnFood">
-	    <div class="col m8">
-	      <h3><a href="#!/rxnDetail/{{item.id}}">{{item.food_type}} Reaction</a></h3>
-	    </div>
-	    <div class="col m4">
-	      <p>{{item.start_date}}</p>
-	    </div>
-	  </div>
+    		<span ng-repeat="item in rxnFood">
+    	    <span><a href="#!/rxnDetail/{{item.id}}">{{item.food_type}} Reaction</a></span>
+    	  </span>
+
+      </div>
+    </div>
 	</div>
 
 	<!-- Trial Event List -->
 
 	<div ng-repeat="item in trialEvents" class="row event">
+  <div class="row"></div>
 		<div class="col m4">
 			<div class="row">
 				<div class="col m12">
 					<h5>{{item.date}}</h5>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col m6">
-					<a data-target='editTrialEventModal' ng-click="getTrialEvent(item.id)" modal><i class="small material-icons">edit</i></a>
-				</div>
-				<div class="col m6">
-					<a data-target='deleteTrialEventModal' ng-click="getTrialEvent(item.id)" modal><i class="small material-icons">delete</i></a>
-				</div>
-			</div>
+			<!-- Fixed Action Button -->
+      <div class="row">
+        <div class="col m12">
+          <div style="position: relative;">
+            <div class="fixed-action-btn horizontal"  style="position: static">
+              <a class="btn-floating btn-large triggerBtn" style="position: absolute; right: 10px; background-color: #F8FF91;">
+                <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+              </a>
+              <ul style="position: absolute; right: 60px;">
+                <li><a class="btn-floating white" data-target='deleteTrialEventModal' ng-click="getTrialEvent(item.id)" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+                <li><a class="btn-floating white" data-target='editTrialEventModal' ng-click="getTrialEvent(item.id)" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 		</div>
 		<div class="col m8">
 			<div class="row">

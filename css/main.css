@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Abel|Comfortaa:300");
 .side-nav {
   background-color: transparent; }
   .side-nav h1 {
@@ -40,25 +41,46 @@ input.data-list-input[type=text]:focus:not([readonly]) {
   border-bottom: none;
   box-shadow: 0 0 0; }
 
+.profileView .dropdown-content {
+  background-color: #b2e8e3; }
+
+.profileView .dropdown-content li > a {
+  color: #003366; }
+
 .event {
   background-color: #b2e8e3;
   border-radius: 15px; }
+
+.currentRxn {
+  margin: 0; }
+
+.chooseChild {
+  margin-top: 100px; }
 
 body {
   background-color: #91d8d3;
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
   min-height: 100vh;
-  color: #003366; }
+  color: #003366;
+  font-family: "Abel", sans-serif;
+  font-size: 1.5em; }
 
 body a {
-  color: #003366; }
+  color: #003366;
+  cursor: pointer; }
+
+body a:hover {
+  color: #529e99; }
 
 .footer-copyright {
   position: fixed;
   bottom: 0;
   right: 5px; }
 
-header, footer, main {
+.specialFont {
+  font-family: 'Comfortaa', sans-serif; }
+
+footer, main {
   padding-left: 300px; }
 
 .topLine {
@@ -70,4 +92,4 @@ header, footer, main {
   color: #003366; }
 
 .tallModal {
-  min-height: 400px; }
+  min-height: 500px; }

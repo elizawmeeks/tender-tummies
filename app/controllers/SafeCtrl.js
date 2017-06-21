@@ -3,6 +3,7 @@
 app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	$scope.selectedNutrient = "all";
 
 	// Sets nav title
 	$rootScope.view = "Safes";
@@ -13,6 +14,21 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		cid: childId,
 		nutrients: ""
 	};
+
+	// $scope.filterNutrients = () => {
+	// 	console.log("$scope.selectedNutrient", $scope.selectedNutrient);
+	// 	if ($scope.selectedNutrient === "all"){
+	// 		return $scope.safeList;
+	// 	} else {
+	// 		$scope.safeList.forEach( element => {
+	// 			element.nutrients.forEach( thing => {
+	// 				if (thing === $scope.selectedNutrient){
+	// 					return thing;
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// };
 
 	// Get safes, loads page.
 	$scope.getSafes = () => {

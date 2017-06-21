@@ -20,11 +20,13 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     	return $q( (resolve, reject) => {
     		$http.get(`${fbcreds.databaseURL}/safe.json?orderBy="cid"&equalTo="${childId}"`)
     		.then( response => {
-    			let safes = response.data;
+    			let safes = response.data,
+              safeArray = [];
     			Object.keys(safes).forEach( key => {
     				safes[key].id = key;
+            safeArray.push(safes[key]);
     			});
-    			resolve(safes);
+    			resolve(safeArray);
     		})
     		.catch( error => {
     			reject(error);

@@ -1,3 +1,8 @@
+<header>
+  <div class="topLine"></div>
+  <div ng-include="'partials/navbar.html'"></div>
+</header>
+
 <div class="container">
   <div class="row">
     <div class="col m12 center-align">
@@ -7,7 +12,7 @@
   <div class="row" ng-repeat="item in children">
     <div class="col m12 center-align">
       <a ng-href="#!/profile/{{item.id}}">
-        <h2>{{item.name}}</h2>
+        <h2 class="specialFont">{{item.name}}</h2>
       </a>
     </div>
   </div>
@@ -54,9 +59,10 @@
       <div input-field class="col s12 data-list-input">
         <select class="data-list-input" ng-model="newChild.gender" material-select watch>
           <option value="" disabled>Choose your option</option>
-          <option value="other">Other, please specify</option>
+          <!-- <option value="other">Other, please specify</option> -->
           <option value="boy">Boy</option>
           <option value="girl">Girl</option>
+          <option value="">Other</option>
           <option value="">Prefer Not to Answer</option>
         </select>
         <label>Gender</label>

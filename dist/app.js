@@ -393,6 +393,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	$scope.selectedNutrient = "all";
 
 	// Sets nav title
 	$rootScope.view = "Safes";
@@ -403,6 +404,21 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		cid: childId,
 		nutrients: ""
 	};
+
+	// $scope.filterNutrients = () => {
+	// 	console.log("$scope.selectedNutrient", $scope.selectedNutrient);
+	// 	if ($scope.selectedNutrient === "all"){
+	// 		return $scope.safeList;
+	// 	} else {
+	// 		$scope.safeList.forEach( element => {
+	// 			element.nutrients.forEach( thing => {
+	// 				if (thing === $scope.selectedNutrient){
+	// 					return thing;
+	// 				}
+	// 			});
+	// 		});
+	// 	}
+	// };
 
 	// Get safes, loads page.
 	$scope.getSafes = () => {
@@ -572,7 +588,7 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		TrialFactory.getTrial($scope.trialId)
 		.then( response => {
 			$scope.currentTrial = response;
-	    $scope.rxn.food_type = $scope.currentTrial.food;
+	    	$scope.rxn.food_type = $scope.currentTrial.food;
 			$rootScope.view = response.food + " Trial";
 		});
 	};
@@ -1072,11 +1088,13 @@ app.factory("SafeFactory", function($q, $http, fbcreds){
     	return $q( (resolve, reject) => {
     		$http.get(`${fbcreds.databaseURL}/safe.json?orderBy="cid"&equalTo="${childId}"`)
     		.then( response => {
-    			let safes = response.data;
+    			let safes = response.data,
+              safeArray = [];
     			Object.keys(safes).forEach( key => {
     				safes[key].id = key;
+            safeArray.push(safes[key]);
     			});
-    			resolve(safes);
+    			resolve(safeArray);
     		})
     		.catch( error => {
     			reject(error);
@@ -1173,10 +1191,12 @@ app.factory("TrialFactory", function($q, $http, fbcreds){
   		$http.get(`${fbcreds.databaseURL}/trial.json?orderBy="cid"&equalTo="${childId}"`)
   		.then( response => {
   			let trials = response.data;
+        let trialArray = [];
   			Object.keys(trials).forEach( key => {
   				trials[key].id = key;
+          trialArray.push(trials[key]);
   			});
-  			resolve(trials);
+  			resolve(trialArray);
   		})
   		.catch( error => {
   			reject(error);
@@ -1323,10 +1343,12 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
   		$http.get(`${fbcreds.databaseURL}/trigger.json?orderBy="cid"&equalTo="${childId}"`)
   		.then( response => {
   			let triggers = response.data;
+        let triggerArray = [];
   			Object.keys(triggers).forEach( key => {
   				triggers[key].id = key;
+          triggerArray.push(triggers[key]);
   			});
-  			resolve(triggers);
+  			resolve(triggerArray);
   		})
   		.catch( error => {
   			reject(error);
@@ -1387,7 +1409,41 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
 });
 "use strict";
 
-app.factory("UserFactory", function($q, $http, fbcreds){
+app.factory("UserFactory", function($window){
+
+    //currentUser, createUser, loginUser, logoutUser, isAuthenticated getUser
+
+  let currentUser = null;
+
+  let logoutUser = function(){
+  		$window.location.href = '#!/splash';
+      return firebase.auth().signOut();
+  };
+
+  let isAuthenticated = function (){
+      return new Promise ( (resolve, reject) => {
+          firebase.auth().onAuthStateChanged( (user) => {
+              if (user){
+                  currentUser = user.uid;
+                  resolve(true);
+              }else {
+                  resolve(false);
+              }
+          });
+      });
+  };
+
+  let getUser = function(){
+      return currentUser;
+  };
+
+  let provider = new firebase.auth.GoogleAuthProvider();
+
+  let loginWithGoogle= function(){
+      return firebase.auth().signInWithPopup(provider);
+  };
+
+  return {logoutUser, isAuthenticated, getUser, loginWithGoogle};
     
 });
 "use strict";
