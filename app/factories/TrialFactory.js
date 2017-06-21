@@ -36,10 +36,12 @@ app.factory("TrialFactory", function($q, $http, fbcreds){
   		$http.get(`${fbcreds.databaseURL}/trial.json?orderBy="cid"&equalTo="${childId}"`)
   		.then( response => {
   			let trials = response.data;
+        let trialArray = [];
   			Object.keys(trials).forEach( key => {
   				trials[key].id = key;
+          trialArray.push(trials[key]);
   			});
-  			resolve(trials);
+  			resolve(trialArray);
   		})
   		.catch( error => {
   			reject(error);

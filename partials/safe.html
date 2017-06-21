@@ -30,11 +30,11 @@
 
   <div ng-repeat="item in safeList | orderBy: 'food'">
     <div class="row triggerRow">
-      <div class="col m2 offset-m5">
+      <div class="col m2 offset-m3">
         <div style="position: relative; height: 70px;">
           <div class="fixed-action-btn horizontal"  style="position: static">
-            <a class="btn-floating btn-large triggerBtn" style="position: absolute; left: 10px; background-color: #F8FF91;">
-              <strong style="color: #003366;">{{$index + 1}}</strong>
+            <a class="btn-floating btn-large triggerBtn" style="position: absolute; left: 10px; top: 5px; background-color: #F8FF91;">
+              <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
             </a>
             <ul>
               <li><a class="btn-floating white" data-target='deleteSafeModal' ng-click="getSafe( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
@@ -43,15 +43,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col m12 center-align">
+      <div class="col m7">
         <h4>{{item.food}}</h4></a>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col m6 offset-m3">
-        <div class="bottomBorder"></div>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Abel|Abril+Fatface");
+@import url("https://fonts.googleapis.com/css?family=Abel|Comfortaa:300");
 .side-nav {
   background-color: transparent; }
   .side-nav h1 {
@@ -54,9 +54,6 @@ input.data-list-input[type=text]:focus:not([readonly]) {
 .chooseChild {
   margin-top: 100px; }
 
-.bottomBorder {
-  border-bottom: 1.5px solid #003366; }
-
 body {
   background-color: #91d8d3;
   background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
@@ -74,7 +71,7 @@ body a {
   right: 5px; }
 
 .specialFont {
-  font-family: 'Abril Fatface', sans-serif; }
+  font-family: 'Comfortaa', sans-serif; }
 
 header, footer, main {
   padding-left: 300px; }
