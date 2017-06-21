@@ -16,17 +16,6 @@
   </div>
 
   <!-- Safes list -->
-<!--   <div class="row" ng-repeat="item in safeList | orderBy: 'food'">
-    <div class="col m2">
-      <a class="waves-effect waves-teal btn-flat"  data-target='editSafeModal' ng-click="getSafe( item.id )" modal><i class="material-icons">mode_edit</i></a>
-    </div>
-    <div class="col m2">
-      <a class="waves-effect waves-teal btn-flat"  data-target='deleteSafeModal' ng-click="getSafe( item.id )" modal><i class="material-icons">delete</i></a>
-    </div>
-    <div class="col m8">
-      <h2>{{item.food}}</h2>
-    </div>
-  </div> -->
 
   <div ng-repeat="item in safeList | orderBy: 'food'">
     <div class="row triggerRow">

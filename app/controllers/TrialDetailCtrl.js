@@ -45,7 +45,7 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		TrialFactory.getTrial($scope.trialId)
 		.then( response => {
 			$scope.currentTrial = response;
-	    $scope.rxn.food_type = $scope.currentTrial.food;
+	    	$scope.rxn.food_type = $scope.currentTrial.food;
 			$rootScope.view = response.food + " Trial";
 		});
 	};

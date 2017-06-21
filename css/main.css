@@ -51,6 +51,9 @@ input.data-list-input[type=text]:focus:not([readonly]) {
   background-color: #b2e8e3;
   border-radius: 15px; }
 
+.currentRxn {
+  margin: 0; }
+
 .chooseChild {
   margin-top: 100px; }
 
@@ -63,7 +66,11 @@ body {
   font-size: 1.5em; }
 
 body a {
-  color: #003366; }
+  color: #003366;
+  cursor: pointer; }
+
+body a:hover {
+  color: #529e99; }
 
 .footer-copyright {
   position: fixed;
