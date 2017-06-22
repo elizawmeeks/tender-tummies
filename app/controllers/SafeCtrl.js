@@ -11,8 +11,8 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Structure of the safe food object, used in both adding and editing safes.
 	$scope.safe = {
 		food: "",
-		cid: childId,
-		nutrients: ""
+		cid: childId
+		// nutrients: ""
 	};
 
 	// $scope.filterNutrients = () => {
@@ -30,7 +30,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// 	}
 	// };
 
-	// Get safes, loads page.
+	// Get safes, loads page. There's some stuff sorting nutrients, but I've shelved the nutrients part of the app for now.
 	$scope.getSafes = () => {
 		SafeFactory.getSafes(childId)
 		.then( response => {
@@ -46,7 +46,6 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 			});
 			// Getting rid of duplicate nutrients in nutrition array. I can now use $scope.reduced to populate my select menu.
 			$scope.reduced = Array.from(new Set (flattened));
-			
 		});
 	};
 
@@ -81,6 +80,26 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 			$scope.getSafes();
 		});
 	};
+
+	$scope.downloadPDF = () => {
+		// console.log("$scope.safeList", $scope.safeList);
+		let pdf = { 
+			content: [
+				{ text: `${$rootScope.currentChild}'s Safe Foods`, style: "header"}
+			],
+			styles: {
+				header: {
+					fontSize: 16,
+					bold: true
+				}
+			} 
+		};
+		for (let thing in $scope.safeList){
+			pdf.content.push($scope.safeList[thing].food);
+		}
+		console.log("pdf", pdf);
+		pdfMake.createPdf(pdf).download(`${$rootScope.currentChild}Safelist.pdf`);
+    };
 
 	// Run get safes initially to load the page.
 	$scope.getSafes();

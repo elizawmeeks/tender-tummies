@@ -67,6 +67,57 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 		});
 	};
 
+  $scope.downloadPDF = () => {
+    // console.log("$scope.safeList", $scope.safeList);
+    let pdf = { 
+      content: [
+        { text: `${$rootScope.currentChild}'s Trigger Foods`, style: "header"}
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true
+        },
+        trigger: {
+          fontSize: 16,
+          bold: true
+        },
+        type: {
+          bold: true
+        }
+      } 
+    };
+    for (let thing in $scope.triggerList){
+      let triggerObj = 
+        {
+          ol: [
+            {text: "Acute Reactions", style: "type"},
+              {
+                ul: []
+              },
+            {text: "Chronic Reactions", style: "type"},
+            {
+              ul: []
+            }
+          ]
+        };
+      let acuteRxn = {text: "Acute Reactions", style: "type"},
+          chronicRxn = {text: "Chronic Reactions", style: "type"},
+          ul = {ul: []};
+      // triggerObj.ol[1].ul.push($scope.triggerList[thing].acute);
+      // triggerObj.ol[3].ul.push($scope.triggerList[thing].chronic);
+      pdf.content.push({text: $scope.triggerList[thing].food, style: 'trigger'});
+      pdf.content.push(acuteRxn);
+      ul = {ul: $scope.triggerList[thing].acute};
+      pdf.content.push(ul);
+      pdf.content.push(chronicRxn);
+      ul = {ul: $scope.triggerList[thing].chronic};
+      pdf.content.push(ul);
+    }
+    console.log("pdf", pdf);
+    pdfMake.createPdf(pdf).download(`${$rootScope.currentChild}Triggerlist.pdf`);
+    };
+
   $scope.getTriggers();
 
 });
