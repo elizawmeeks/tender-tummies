@@ -432,8 +432,8 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Structure of the safe food object, used in both adding and editing safes.
 	$scope.safe = {
 		food: "",
-		cid: childId,
-		nutrients: ""
+		cid: childId
+		// nutrients: ""
 	};
 
 	// $scope.filterNutrients = () => {
@@ -451,7 +451,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// 	}
 	// };
 
-	// Get safes, loads page.
+	// Get safes, loads page. There's some stuff sorting nutrients, but I've shelved the nutrients part of the app for now.
 	$scope.getSafes = () => {
 		SafeFactory.getSafes(childId)
 		.then( response => {
@@ -467,7 +467,6 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 			});
 			// Getting rid of duplicate nutrients in nutrition array. I can now use $scope.reduced to populate my select menu.
 			$scope.reduced = Array.from(new Set (flattened));
-			
 		});
 	};
 
@@ -502,6 +501,26 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 			$scope.getSafes();
 		});
 	};
+
+	$scope.downloadPDF = () => {
+		// console.log("$scope.safeList", $scope.safeList);
+		let pdf = { 
+			content: [
+				{ text: `${$rootScope.currentChild}'s Safe Foods`, style: "header"}
+			],
+			styles: {
+				header: {
+					fontSize: 16,
+					bold: true
+				}
+			} 
+		};
+		for (let thing in $scope.safeList){
+			pdf.content.push($scope.safeList[thing].food);
+		}
+		console.log("pdf", pdf);
+		pdfMake.createPdf(pdf).download(`${$rootScope.currentChild}Safelist.pdf`);
+    };
 
 	// Run get safes initially to load the page.
 	$scope.getSafes();
@@ -833,6 +852,57 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 			$scope.getTriggers();
 		});
 	};
+
+  $scope.downloadPDF = () => {
+    // console.log("$scope.safeList", $scope.safeList);
+    let pdf = { 
+      content: [
+        { text: `${$rootScope.currentChild}'s Trigger Foods`, style: "header"}
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true
+        },
+        trigger: {
+          fontSize: 16,
+          bold: true
+        },
+        type: {
+          bold: true
+        }
+      } 
+    };
+    for (let thing in $scope.triggerList){
+      let triggerObj = 
+        {
+          ol: [
+            {text: "Acute Reactions", style: "type"},
+              {
+                ul: []
+              },
+            {text: "Chronic Reactions", style: "type"},
+            {
+              ul: []
+            }
+          ]
+        };
+      let acuteRxn = {text: "Acute Reactions", style: "type"},
+          chronicRxn = {text: "Chronic Reactions", style: "type"},
+          ul = {ul: []};
+      // triggerObj.ol[1].ul.push($scope.triggerList[thing].acute);
+      // triggerObj.ol[3].ul.push($scope.triggerList[thing].chronic);
+      pdf.content.push({text: $scope.triggerList[thing].food, style: 'trigger'});
+      pdf.content.push(acuteRxn);
+      ul = {ul: $scope.triggerList[thing].acute};
+      pdf.content.push(ul);
+      pdf.content.push(chronicRxn);
+      ul = {ul: $scope.triggerList[thing].chronic};
+      pdf.content.push(ul);
+    }
+    console.log("pdf", pdf);
+    pdfMake.createPdf(pdf).download(`${$rootScope.currentChild}Triggerlist.pdf`);
+    };
 
   $scope.getTriggers();
 
