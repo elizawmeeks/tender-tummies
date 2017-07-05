@@ -1,9 +1,7 @@
 "use strict";
 
 app.factory("UserFactory", function($window){
-
-    //currentUser, createUser, loginUser, logoutUser, isAuthenticated getUser
-
+  
   let currentUser = null;
 
   let logoutUser = function(){

@@ -7,8 +7,10 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       rxnArray = [],
       isArray = false;
 
+  // Changes title on the navbar
 	$rootScope.view = "Triggers";
 
+  // Creating/editing triggers
   $scope.trigger = {
   	food: "",
   	cid: childId,
@@ -57,6 +59,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
     });
   };
 
+  // Had some weird issues getting a modal to close on this partial for some reason, so I hardcoded the close in.
   $scope.removeOverlay = () => {
     $(".modal-overlay").remove();
   };
@@ -77,6 +80,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 		});
 	};
 
+  // Downloads PDF of the trigger list with associated reactions
   $scope.downloadPDF = () => {
     // console.log("$scope.safeList", $scope.safeList);
     let pdf = { 
@@ -128,6 +132,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
     pdfMake.createPdf(pdf).download(`${$rootScope.currentChild}Triggerlist.pdf`);
     };
 
+    // Runs to make the page load.
   $scope.getTriggers();
 
 });

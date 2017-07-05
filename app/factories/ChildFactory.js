@@ -2,6 +2,7 @@
 
 app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 
+	// Add's child object to firebase
 	const addChild = ( childObj ) => {
 		return $q( (resolve, reject) => {
 			let object = JSON.stringify(childObj);
@@ -15,6 +16,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Gets all the children associated with a certain user
 	const getChildren = (userId) => {
 		return $q( (resolve, reject) => {
 			$http.get(`${fbcreds.databaseURL}/child.json?orderBy="uid"&equalTo="${userId}"`)
@@ -31,6 +33,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Gets one child's profile
 	const getChild = ( childId ) => {
 		return $q( (resolve, reject) => {
 			$http.get(`${fbcreds.databaseURL}/child/${childId}.json`)
@@ -45,6 +48,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Edits a child's profile
 	const editChild = ( childId, childObj ) => {
 		return $q((resolve, reject) => {
 			let changedChild = JSON.stringify(childObj);
@@ -58,6 +62,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Delete child profile
 	const deleteChild = ( childId ) => {
 		return $q( (resolve, reject) => {
 			$http.delete(`${fbcreds.databaseURL}/child/${childId}.json`)

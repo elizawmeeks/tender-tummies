@@ -5,14 +5,17 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
+	// Sets title in navbar
 	$rootScope.view = "Trials";
 
+	// newTrial object for adding and editing trials.
 	$scope.newTrial = {
 		food: "",
 		start_date: "",
 		cid: childId
 	};
 
+	// Adds trial, rungs $scope.getTrials to reload the page with the new trial.
 	$scope.addTrial = () => {
 		TrialFactory.addTrial($scope.newTrial)
 		.then( response => {
@@ -20,7 +23,7 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 		});
 	};
 
-	// Get trials to populate the page
+	// Get trials, sets $scope.trials to populate the page
 	$scope.getTrials = () => {
 		TrialFactory.getTrials(childId)
 		.then( response => {
@@ -52,6 +55,7 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 		});
 	};
 
+	// Runs on pageload to populate the page
 	$scope.getTrials();
     
 });

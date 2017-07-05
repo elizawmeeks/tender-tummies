@@ -1,9 +1,10 @@
 "use strict";
 
 app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $route, $rootScope, TriggerFactory, SafeFactory){
-	// Establish the 
+	// Establish the routeId, which is the id of the child.
 	$scope.routeId = $routeParams.profileId;
 
+	// Child object, allows user to edit the profile.
 	$scope.child = {
 		name: "",
 		age: "",
@@ -12,6 +13,7 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 		gender: "",
 	};
 
+	// Gets the child's information to dipslay it on the page.
 	ChildFactory.getChild($scope.routeId)
 	.then( childObj => {
 		$scope.child = childObj;
@@ -21,10 +23,12 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 		$rootScope.view = "Profile";
 	});
 
+	// editChild allows the user to edit the child's profile.
 	$scope.editChild = () => {
 		ChildFactory.editChild ( $scope.routeId, $scope.child );
 	};
 
+	// deleteChild allows the user to delete a child's profile
 	$scope.deleteChild = () => {
 		ChildFactory.deleteChild($scope.routeId)
 		.then( response => {
@@ -32,11 +36,11 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 		});
 	};
 
-	// Get safes and saves teh number of safes forthe profiles view.
+	// Get safes and saves the number of safes forthe profiles view.
 	SafeFactory.getSafes($scope.routeId)
 	.then( response => {
 		let safeArray = [];
-		// Putting all of the nutrition arrays into one, nested array.
+		// Putting all of the nutrition arrays into one, nested array. Nutrition stuff has been shelved for the moment but there's still some parts of it in the code.
 		for (let element in response){
 			safeArray.push(response[element]);
 		}

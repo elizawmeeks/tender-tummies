@@ -81,6 +81,7 @@ app.run((fbcreds)=>{
    firebase.initializeApp(authConfig);
 });
 
+// Sets variables to control the navbar displays on each page.
 app.run( $rootScope => {
     $rootScope.currentChild = null;
     $rootScope.isChild = false;

@@ -3,9 +3,10 @@
 app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	// Again, the nutrient filtering has been shelved for the moment, but there's still some of it, especially in this controller.
 	$scope.selectedNutrient = "all";
 
-	// Sets nav title
+	// Sets nav title for this page
 	$rootScope.view = "Safes";
 
 	// Structure of the safe food object, used in both adding and editing safes.
@@ -81,6 +82,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		});
 	};
 
+	// Downloads a PDF of the safelist.
 	$scope.downloadPDF = () => {
 		// console.log("$scope.safeList", $scope.safeList);
 		let pdf = { 

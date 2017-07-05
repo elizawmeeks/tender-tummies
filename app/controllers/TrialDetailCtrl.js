@@ -1,10 +1,13 @@
 "use strict";
 
 app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, TrialFactory, TriggerFactory, SafeFactory, $routeParams){
-
+	
+	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	// Sets trial id locally
 	$scope.trialId = $routeParams.trialId;
 
+	// Trial event for adding/editing them
 	$scope.trial_event = {
 		trial_id: $scope.trialId,
 		quantity: "",
@@ -14,6 +17,7 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		date: ""
 	};
 
+	// For creating a rxn from the trial detail page
 	$scope.rxn = {
 		start_date: "",
 		ingestion: "",
@@ -22,12 +26,14 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		trial_id: $scope.trialId
 	};
 
+	// For creating a safe
 	$scope.safe = {
 		food: "",
 		cid: childId,
 		nutrients: []
 	};
 
+	// For creating a trigger
 	$scope.trigger = {
   	food: "",
   	cid: childId,
@@ -37,10 +43,12 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
   	nutrients: []
   };
 
+  // Variables to manipulate the ng-show elements in the html
 	$scope.isRxn = false;
 	$scope.safeAdded = false;
 	$scope.triggerAdded = false;
 
+	// Gets the trial specific information.
 	$scope.getTrial = () => {
 		TrialFactory.getTrial($scope.trialId)
 		.then( response => {
@@ -143,6 +151,7 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		});
 	};
 
+	// All the functions required to load the page.
 	let loadPage = () => {
 		$scope.getTrialEvents();
 		$scope.getTrial();

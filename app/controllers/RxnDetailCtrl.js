@@ -2,10 +2,16 @@
 
 app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeParams, TriggerFactory){
 
+  // Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
-	$scope.rxnId = $routeParams.rxnId;
+	
+  // Sets rxnId so it's easy to get locally.
+  $scope.rxnId = $routeParams.rxnId;
+
+  // Sets title in navbar to correlate to current page
   $rootScope.view = "Trial Detail";
 
+  // Rxn Event object to create and edit rxn events.
   $scope.rxn_event = {
   	rxn_id: $scope.rxnId,
   	symptom: [],
@@ -34,6 +40,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
+  // Adds rxn event to the database, then runs getRxnEvents so that we can see the added rxnEvent as well as the other ones.
   $scope.addRxnEvent = () => {
   	RxnFactory.addRxnEvent($scope.rxn_event)
     .then( response => {
@@ -42,6 +49,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	
   };
 
+  // Gets a single rxn event so that each event can be edited and deleted.
   $scope.getRxnEvent = (eventId) => {
     RxnFactory.getRxnEvent(eventId)
     .then( response => {
@@ -64,6 +72,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
 
+  // Allows the user to edit rxn events.
   $scope.editRxnEvent = ( eventId, eventObj ) => {
     RxnFactory.editRxnEvent( eventId, eventObj )
     .then( () => {
@@ -72,7 +81,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 
   };
 
-  // Deletes rxn objects from firebase
+  // Deletes rxn event objects from firebase then runs getRxnEvents to re-load the page without the deleted information.
   $scope.deleteRxnEvent = (eventId) => {
     RxnFactory.deleteRxnEvent(eventId)
     .then( response => {
@@ -80,6 +89,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
     });
   };
 
+  // getRxnEvents grabs all the rxn events and sets them as $scope.rxnEvents to display on the page.
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
@@ -87,6 +97,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
+  // Ends the rxn and updates the rxnEvent object 
   $scope.endRxn = () => {
   	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
   	.then( response => {
@@ -94,6 +105,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
+  // Runs all fo the functions needed to load the page
   let loadPage = () => {
 	  $scope.getRxn();
 	  $scope.getRxnEvents();
