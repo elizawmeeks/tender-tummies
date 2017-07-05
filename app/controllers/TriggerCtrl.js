@@ -3,7 +3,9 @@
 app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
 
 	// Sets current child id into an easier to use, local, variable.
-	let childId = $rootScope.currentChildId;
+	let childId = $rootScope.currentChildId,
+      rxnArray = [],
+      isArray = false;
 
 	$rootScope.view = "Triggers";
 
@@ -36,13 +38,21 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
   $scope.getTrigger = (triggerId) => {
   	let p1 = TriggerFactory.getTrigger(triggerId),
         p2 = RxnFactory.getRxnsByTrigger(triggerId);
+    isArray = false;
     Promise.all([p1,p2])
     .then( values => {
-  		$scope.currentTrigger = values[0];
-      $scope.rxnArray = [];
+      $scope.currentTrigger = values[0];
+      rxnArray = [];
       for (let thing in values[1]){
-        $scope.rxnArray.push(values[1][thing]);
+        rxnArray.push(values[1][thing]);
       }     
+      if (rxnArray.length > 0) {
+        isArray = true;
+        $scope.rxnArray = rxnArray;
+        console.log("$scope.rxnArray", $scope.rxnArray);
+      } else {
+        $scope.rxnArray = [];
+      }
       console.log("rxn Array, triggersCtrl", $scope.rxnArray);
     });
   };

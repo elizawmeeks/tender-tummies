@@ -30,7 +30,7 @@
               <a class="btn-floating btn-large triggerBtn" style="position: absolute; left: 10px; top: 5px; background-color: #F8FF91;">
                 <i class="material-icons" style="color: #003366;">add</i>
               </a>
-              <ul>
+              <ul style="position: absolute; right: 70px; top: 30px;">
                 <li><a class="btn-floating white" data-target="triggerDetailModal" ng-click="getTrigger( item.id )" modal><i class="material-icons" style="color: #529e99;">info</i></a></li>
                 <li><a class="btn-floating white" data-target='deleteTriggerModal' ng-click="getTrigger( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
                 <li><a class="btn-floating white" data-target='editTriggerModal' ng-click="getTrigger( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
@@ -154,19 +154,19 @@
   </div>
 
   <!-- Trigger Detail Modal -->
-  <div id="triggerDetailModal" class="modal tallModal">
+  <div id="triggerDetailModal" class="modal">
     <div class="modal-content">
       <h4>{{currentTrigger.food}}</h4>
       <div ng-show="currentTrigger.acute">
-        <h5>Acute Symptoms:</h5>
+        <small>Acute Symptoms:</small><br>
         <span ng-repeat="item in currentTrigger.acute">{{item}}{{$last ? '' : ', '}}</span >
-      </div>
+      </div><br>
       <div ng-show="currentTrigger.chronic">
-        <h5>Chronic Symptoms:</h5>
+        <small>Chronic Symptoms:</small><br>
         <span ng-repeat="item in currentTrigger.chronic">{{item}}{{$last ? '' : ', '}}</span >
-      </div>
-      <div ng-show="rxnArray">
-        <h5>Associated Reactions:</h5>
+      </div><br>
+      <div ng-hide="rxnArray.length === 0">
+        <small>Associated Reactions:</small><br>
         <span ng-repeat="thing in rxnArray">
           <a href="#!/rxnDetail/{{thing.id}}" class="modal-action modal-close" ng-click="removeOverlay()">
             {{thing.food_type}}
