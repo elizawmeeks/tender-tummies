@@ -1,9 +1,10 @@
 "use strict";
 
 app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFactory){
-
+	// Sets user
 	let user = UserFactory.getUser();
 
+	// Object to create a new child's profile
 	$scope.newChild = {
 		name: "",
 		age: "",
@@ -13,10 +14,34 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFact
 		uid: user
 	};
 
+	// $rootScope is used to affect the display in the navbar throughout the app.
+		// currentChild will allow us to track and display the data for the selected child throughout the app.
 	$rootScope.currentChild = null;
+		// isChild true/false changes the display of the navbar. If a child is selected Triggers, Safes, Rxns, and Trials will display in the nav.
 	$rootScope.isChild = false;
+		// currentChildId is the firebase ID assigned to each child object, allows us to track data in firebase.
 	$rootScope.currentChildId = "";
+		// view is the title displayed in the navbar on each page 
 	$rootScope.view = "Tender Tummies";
+
+	// Add child allows you to add a new child's profile
+	$scope.addChild = () => {
+		ChildFactory.addChild( $scope.newChild )
+		.then( stuff => {
+			$scope.getChildren();
+		});
+	};
+
+	// getChildren pulls all of the children associated with this user and displays each child's name.
+	$scope.getChildren = () => {
+		ChildFactory.getChildren(user)
+		.then( childrenObj => {
+			$scope.children = childrenObj;
+		});
+	};
+
+	// We must run getChildren in order to see the children dispalyed on the page.
+	$scope.getChildren();
 
 	// Stuff for Input area for genders, get back to later
 	// $("#addChildModal").on("click.open", function(){
@@ -40,20 +65,6 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFact
 	// 	$('select.data-list-input').val('');
 	// });
 
-	$scope.addChild = () => {
-		ChildFactory.addChild( $scope.newChild )
-		.then( stuff => {
-			$scope.getChildren();
-		});
-	};
 
-	$scope.getChildren = () => {
-		ChildFactory.getChildren(user)
-		.then( childrenObj => {
-			$scope.children = childrenObj;
-		});
-	};
-
-	$scope.getChildren();
     
 });

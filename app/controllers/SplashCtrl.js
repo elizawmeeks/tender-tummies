@@ -1,9 +1,10 @@
 "use strict";
 
 app.controller("SplashCtrl", function($scope, $timeout, UserFactory, $location, $window){
-
+	// ain't nobody here
 	$scope.noUser = true;
 
+	// logout will logout anyone who is accidentally logged in.
   let logout = () => {
   	$scope.noUser = false;
     UserFactory.logoutUser()

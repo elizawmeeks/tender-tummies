@@ -1,12 +1,14 @@
 "use strict";
 
 app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
-
+  // Rxn is a shorter way of saying "reaction"
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
+  // Sets the title in the navbar to match the page we're on.
 	$rootScope.view = "Reactions";
 
+  // Rxn object allows user to create and edit rxns.
 	$scope.rxn = {
 		start_date: "",
 		ingestion: "",

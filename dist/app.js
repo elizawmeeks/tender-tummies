@@ -81,6 +81,7 @@ app.run((fbcreds)=>{
    firebase.initializeApp(authConfig);
 });
 
+// Sets variables to control the navbar displays on each page.
 app.run( $rootScope => {
     $rootScope.currentChild = null;
     $rootScope.isChild = false;
@@ -100,9 +101,10 @@ $(document).ready(function() {
 "use strict";
 
 app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFactory){
-
+	// Sets user
 	let user = UserFactory.getUser();
 
+	// Object to create a new child's profile
 	$scope.newChild = {
 		name: "",
 		age: "",
@@ -112,10 +114,34 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFact
 		uid: user
 	};
 
+	// $rootScope is used to affect the display in the navbar throughout the app.
+		// currentChild will allow us to track and display the data for the selected child throughout the app.
 	$rootScope.currentChild = null;
+		// isChild true/false changes the display of the navbar. If a child is selected Triggers, Safes, Rxns, and Trials will display in the nav.
 	$rootScope.isChild = false;
+		// currentChildId is the firebase ID assigned to each child object, allows us to track data in firebase.
 	$rootScope.currentChildId = "";
+		// view is the title displayed in the navbar on each page 
 	$rootScope.view = "Tender Tummies";
+
+	// Add child allows you to add a new child's profile
+	$scope.addChild = () => {
+		ChildFactory.addChild( $scope.newChild )
+		.then( stuff => {
+			$scope.getChildren();
+		});
+	};
+
+	// getChildren pulls all of the children associated with this user and displays each child's name.
+	$scope.getChildren = () => {
+		ChildFactory.getChildren(user)
+		.then( childrenObj => {
+			$scope.children = childrenObj;
+		});
+	};
+
+	// We must run getChildren in order to see the children dispalyed on the page.
+	$scope.getChildren();
 
 	// Stuff for Input area for genders, get back to later
 	// $("#addChildModal").on("click.open", function(){
@@ -139,36 +165,17 @@ app.controller("ChooseCtrl", function($scope, ChildFactory, $rootScope, UserFact
 	// 	$('select.data-list-input').val('');
 	// });
 
-	$scope.addChild = () => {
-		ChildFactory.addChild( $scope.newChild )
-		.then( stuff => {
-			$scope.getChildren();
-		});
-	};
 
-	$scope.getChildren = () => {
-		ChildFactory.getChildren(user)
-		.then( childrenObj => {
-			$scope.children = childrenObj;
-		});
-	};
-
-	$scope.getChildren();
     
 });
 
 "use strict";
 
-app.controller("NavCtrl", function($scope, ChildFactory, NavDataFactory, $rootScope){
-
-});
-
-"use strict";
-
 app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $route, $rootScope, TriggerFactory, SafeFactory){
-	// Establish the 
+	// Establish the routeId, which is the id of the child.
 	$scope.routeId = $routeParams.profileId;
 
+	// Child object, allows user to edit the profile.
 	$scope.child = {
 		name: "",
 		age: "",
@@ -177,6 +184,7 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 		gender: "",
 	};
 
+	// Gets the child's information to dipslay it on the page.
 	ChildFactory.getChild($scope.routeId)
 	.then( childObj => {
 		$scope.child = childObj;
@@ -186,10 +194,12 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 		$rootScope.view = "Profile";
 	});
 
+	// editChild allows the user to edit the child's profile.
 	$scope.editChild = () => {
 		ChildFactory.editChild ( $scope.routeId, $scope.child );
 	};
 
+	// deleteChild allows the user to delete a child's profile
 	$scope.deleteChild = () => {
 		ChildFactory.deleteChild($scope.routeId)
 		.then( response => {
@@ -197,11 +207,11 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 		});
 	};
 
-	// Get safes and saves teh number of safes forthe profiles view.
+	// Get safes and saves the number of safes forthe profiles view.
 	SafeFactory.getSafes($scope.routeId)
 	.then( response => {
 		let safeArray = [];
-		// Putting all of the nutrition arrays into one, nested array.
+		// Putting all of the nutrition arrays into one, nested array. Nutrition stuff has been shelved for the moment but there's still some parts of it in the code.
 		for (let element in response){
 			safeArray.push(response[element]);
 		}
@@ -223,12 +233,14 @@ app.controller("ProfileCtrl", function($scope, ChildFactory, $routeParams, $rout
 "use strict";
 
 app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactory){
-
+  // Rxn is a shorter way of saying "reaction"
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
+  // Sets the title in the navbar to match the page we're on.
 	$rootScope.view = "Reactions";
 
+  // Rxn object allows user to create and edit rxns.
 	$scope.rxn = {
 		start_date: "",
 		ingestion: "",
@@ -318,10 +330,16 @@ app.controller("RxnCtrl", function($scope, $rootScope, TriggerFactory, RxnFactor
 
 app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeParams, TriggerFactory){
 
+  // Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
-	$scope.rxnId = $routeParams.rxnId;
+	
+  // Sets rxnId so it's easy to get locally.
+  $scope.rxnId = $routeParams.rxnId;
+
+  // Sets title in navbar to correlate to current page
   $rootScope.view = "Trial Detail";
 
+  // Rxn Event object to create and edit rxn events.
   $scope.rxn_event = {
   	rxn_id: $scope.rxnId,
   	symptom: [],
@@ -350,6 +368,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
+  // Adds rxn event to the database, then runs getRxnEvents so that we can see the added rxnEvent as well as the other ones.
   $scope.addRxnEvent = () => {
   	RxnFactory.addRxnEvent($scope.rxn_event)
     .then( response => {
@@ -358,6 +377,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	
   };
 
+  // Gets a single rxn event so that each event can be edited and deleted.
   $scope.getRxnEvent = (eventId) => {
     RxnFactory.getRxnEvent(eventId)
     .then( response => {
@@ -380,6 +400,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 	$scope.minDate = (new Date($scope.currentTime.getTime() - ( 1000 * 60 * 60 *24 * days ))).toISOString();
 	$scope.maxDate = (new Date($scope.currentTime.getTime() + ( 1000 * 60 * 60 *24 * days ))).toISOString();
 
+  // Allows the user to edit rxn events.
   $scope.editRxnEvent = ( eventId, eventObj ) => {
     RxnFactory.editRxnEvent( eventId, eventObj )
     .then( () => {
@@ -388,7 +409,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 
   };
 
-  // Deletes rxn objects from firebase
+  // Deletes rxn event objects from firebase then runs getRxnEvents to re-load the page without the deleted information.
   $scope.deleteRxnEvent = (eventId) => {
     RxnFactory.deleteRxnEvent(eventId)
     .then( response => {
@@ -396,6 +417,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
     });
   };
 
+  // getRxnEvents grabs all the rxn events and sets them as $scope.rxnEvents to display on the page.
 	$scope.getRxnEvents = () => {
   	RxnFactory.getRxnEvents($scope.rxnId)
   	.then( response => {
@@ -403,6 +425,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
+  // Ends the rxn and updates the rxnEvent object 
   $scope.endRxn = () => {
   	RxnFactory.editRxn($scope.rxnId, $scope.currentRxn)
   	.then( response => {
@@ -410,6 +433,7 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
   	});
   };
 
+  // Runs all fo the functions needed to load the page
   let loadPage = () => {
 	  $scope.getRxn();
 	  $scope.getRxnEvents();
@@ -424,9 +448,10 @@ app.controller("RxnDetailCtrl", function($scope, $rootScope, RxnFactory, $routeP
 app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	// Again, the nutrient filtering has been shelved for the moment, but there's still some of it, especially in this controller.
 	$scope.selectedNutrient = "all";
 
-	// Sets nav title
+	// Sets nav title for this page
 	$rootScope.view = "Safes";
 
 	// Structure of the safe food object, used in both adding and editing safes.
@@ -502,6 +527,7 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 		});
 	};
 
+	// Downloads a PDF of the safelist.
 	$scope.downloadPDF = () => {
 		// console.log("$scope.safeList", $scope.safeList);
 		let pdf = { 
@@ -529,9 +555,10 @@ app.controller("SafeCtrl", function($scope, SafeFactory, $rootScope){
 "use strict";
 
 app.controller("SplashCtrl", function($scope, $timeout, UserFactory, $location, $window){
-
+	// ain't nobody here
 	$scope.noUser = true;
 
+	// logout will logout anyone who is accidentally logged in.
   let logout = () => {
   	$scope.noUser = false;
     UserFactory.logoutUser()
@@ -578,14 +605,17 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
 
+	// Sets title in navbar
 	$rootScope.view = "Trials";
 
+	// newTrial object for adding and editing trials.
 	$scope.newTrial = {
 		food: "",
 		start_date: "",
 		cid: childId
 	};
 
+	// Adds trial, rungs $scope.getTrials to reload the page with the new trial.
 	$scope.addTrial = () => {
 		TrialFactory.addTrial($scope.newTrial)
 		.then( response => {
@@ -593,7 +623,7 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 		});
 	};
 
-	// Get trials to populate the page
+	// Get trials, sets $scope.trials to populate the page
 	$scope.getTrials = () => {
 		TrialFactory.getTrials(childId)
 		.then( response => {
@@ -625,6 +655,7 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 		});
 	};
 
+	// Runs on pageload to populate the page
 	$scope.getTrials();
     
 });
@@ -632,10 +663,13 @@ app.controller("TrialCtrl", function($scope, $rootScope, TrialFactory){
 "use strict";
 
 app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, TrialFactory, TriggerFactory, SafeFactory, $routeParams){
-
+	
+	// Sets current child id into an easier to use, local, variable.
 	let childId = $rootScope.currentChildId;
+	// Sets trial id locally
 	$scope.trialId = $routeParams.trialId;
 
+	// Trial event for adding/editing them
 	$scope.trial_event = {
 		trial_id: $scope.trialId,
 		quantity: "",
@@ -645,6 +679,7 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		date: ""
 	};
 
+	// For creating a rxn from the trial detail page
 	$scope.rxn = {
 		start_date: "",
 		ingestion: "",
@@ -653,12 +688,14 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		trial_id: $scope.trialId
 	};
 
+	// For creating a safe
 	$scope.safe = {
 		food: "",
 		cid: childId,
 		nutrients: []
 	};
 
+	// For creating a trigger
 	$scope.trigger = {
   	food: "",
   	cid: childId,
@@ -668,10 +705,12 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
   	nutrients: []
   };
 
+  // Variables to manipulate the ng-show elements in the html
 	$scope.isRxn = false;
 	$scope.safeAdded = false;
 	$scope.triggerAdded = false;
 
+	// Gets the trial specific information.
 	$scope.getTrial = () => {
 		TrialFactory.getTrial($scope.trialId)
 		.then( response => {
@@ -774,6 +813,7 @@ app.controller("TrialDetailCtrl", function($scope, $rootScope, RxnFactory, Trial
 		});
 	};
 
+	// All the functions required to load the page.
 	let loadPage = () => {
 		$scope.getTrialEvents();
 		$scope.getTrial();
@@ -793,8 +833,10 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
       rxnArray = [],
       isArray = false;
 
+  // Changes title on the navbar
 	$rootScope.view = "Triggers";
 
+  // Creating/editing triggers
   $scope.trigger = {
   	food: "",
   	cid: childId,
@@ -843,6 +885,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
     });
   };
 
+  // Had some weird issues getting a modal to close on this partial for some reason, so I hardcoded the close in.
   $scope.removeOverlay = () => {
     $(".modal-overlay").remove();
   };
@@ -863,6 +906,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 		});
 	};
 
+  // Downloads PDF of the trigger list with associated reactions
   $scope.downloadPDF = () => {
     // console.log("$scope.safeList", $scope.safeList);
     let pdf = { 
@@ -914,6 +958,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
     pdfMake.createPdf(pdf).download(`${$rootScope.currentChild}Triggerlist.pdf`);
     };
 
+    // Runs to make the page load.
   $scope.getTriggers();
 
 });
@@ -922,6 +967,7 @@ app.controller("TriggerCtrl", function($scope, $rootScope, TriggerFactory, RxnFa
 
 app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 
+	// Add's child object to firebase
 	const addChild = ( childObj ) => {
 		return $q( (resolve, reject) => {
 			let object = JSON.stringify(childObj);
@@ -935,6 +981,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Gets all the children associated with a certain user
 	const getChildren = (userId) => {
 		return $q( (resolve, reject) => {
 			$http.get(`${fbcreds.databaseURL}/child.json?orderBy="uid"&equalTo="${userId}"`)
@@ -951,6 +998,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Gets one child's profile
 	const getChild = ( childId ) => {
 		return $q( (resolve, reject) => {
 			$http.get(`${fbcreds.databaseURL}/child/${childId}.json`)
@@ -965,6 +1013,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Edits a child's profile
 	const editChild = ( childId, childObj ) => {
 		return $q((resolve, reject) => {
 			let changedChild = JSON.stringify(childObj);
@@ -978,6 +1027,7 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		});
 	};
 
+	// Delete child profile
 	const deleteChild = ( childId ) => {
 		return $q( (resolve, reject) => {
 			$http.delete(`${fbcreds.databaseURL}/child/${childId}.json`)
@@ -997,16 +1047,6 @@ app.factory("ChildFactory", function($q, $http, fbcreds, $route){
 		editChild,
 		deleteChild
 	};
-    
-});
-"use strict";
-
-app.factory("NavDataFactory", function($q, $http, fbcreds){
-    
-    return {
-    	view: "",
-    	child: ""
-    };
     
 });
 "use strict";
@@ -1559,9 +1599,7 @@ app.factory("TriggerFactory", function($q, $http, fbcreds){
 "use strict";
 
 app.factory("UserFactory", function($window){
-
-    //currentUser, createUser, loginUser, logoutUser, isAuthenticated getUser
-
+  
   let currentUser = null;
 
   let logoutUser = function(){
