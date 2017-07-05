@@ -30,7 +30,7 @@ Enter the "lib" directory on the terminal and run:
 npm install
 ```
 
-After everything is installed run:
+After everything is installed start grunt, still in your lib folder in your terminal, by running:
 
 ```
 grunt
