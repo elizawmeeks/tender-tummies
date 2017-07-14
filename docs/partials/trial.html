@@ -1,0 +1,100 @@
+<div class="pushMeOver">  
+  <header>
+    <div class="topLine"></div>
+    <div ng-include="'partials/navbar.html'"></div>
+  </header>
+  <!-- Add Reaction Button -->
+  <div class="container">
+    <div class="row"></div>
+    <div class="row">
+      <div class="col m12 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTrialModal' modal>Add Trial</a>
+      </div>
+    </div>
+
+    <!-- Trial List, including modal triggers for edit, delete -->
+
+    <div ng-repeat="item in trials">
+      <div class="row">
+        <div class="col m2 offset-m2">
+          <div style="position: relative; height: 70px;">
+            <div class="fixed-action-btn horizontal"  style="position: static">
+              <a class="btn-floating btn-large triggerBtn" style="position: absolute; left: 10px; top: 25px; background-color: #F8FF91;">
+                <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+              </a>
+              <ul style="position: absolute; right: 70px; top: 50px;">
+                <li><a class="btn-floating white" href="#!/trialDetail/{{item.id}}"><i class="material-icons" style="color: #529e99;">info</i></a></li>
+                <li><a class="btn-floating white" data-target='deleteTrialModal' ng-click="getTrial( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+                <li><a class="btn-floating white" data-target='editTrialModal' ng-click="getTrial( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col m7">
+          <a href="#!/trialDetail/{{item.id}}"><h4>{{item.food}}</h4>
+          <h5>{{item.start_date}}<span ng-show="item.end_date"> - {{item.end_date}}</span></h5></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Add Trial Modal -->
+  <div id="addTrialModal" class="modal tallModal">
+    <div class="modal-content">
+      <!-- <div class="row moveModal"></div> -->
+      <h4>Add Trial</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="newTrial.food" placeholder="Milk">
+          <label>Food</label>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col s12">
+  	      <label for="inputCreated">Start date</label>
+  				<input input-date type="text" name="created" id="inputCreated" ng-model="newTrial.start_date"/>
+  			</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trial" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addTrial()">Add Trial</a>
+    </div>
+  </div>
+
+  <!-- Edit Trial Modal -->
+  <div id="editTrialModal" class="modal tallModal">
+    <div class="modal-content">
+      <h4>Edit Trial</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="currentTrial.food" placeholder="Milk">
+          <label>Food</label>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col s12">
+  	      <label for="inputCreated">Start date</label>
+  				<input input-date type="text" name="created" id="inputCreated" ng-model="currentTrial.start_date"/>
+  			</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trial" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editTrial(currentTrial.id, currentTrial)">Edit Trial</a>
+    </div>
+  </div>
+
+  <!-- Delete Trial Modal -->
+  <div id="deleteTrialModal" class="modal">
+    <div class="modal-content">
+      <div class="row">
+        <div input-field class="col s12">
+          <p>Are you sure you want to delete this {{currentTrial.food}} trial?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trial" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteTrial(currentTrial.id)">Delete {{currentTrial.food}} Trial</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div>
+	<ul id="slide-out" class="side-nav fixed z-depth-0">
+		<li>
+			<img class="heartLogo" src="../img/logo.png">
+		</li>
+		<li>
+			<h2 class="center-align titleInNav specialFont">{{view}}</h2>
+		</li>
+		<li>
+			<div class="navLine"></div>
+		</li>
+	  <li>
+	  	<a class="center-align" href="#!/profile/{{currentChildId}}" ng-show="isChild">
+	  		<h3 class="specialFont">{{currentChild}}</h3>
+	  	</a>
+	  </li>
+	  <li>
+	  	<a class="center-align" href="#!/trigger" ng-show="isChild">Triggers</a>
+	  </li>
+	  <li>
+	  	<a class="center-align" href="#!/safe" ng-show="isChild">Safes</a>
+	  </li>
+	  <li>
+	  	<a class="center-align" href="#!/trial" ng-show="isChild">Trials</a>
+	  </li>
+	  <li><a class="center-align" href="#!/rxn" ng-show="isChild">Reactions</a></li>
+	  <br><br>
+	  <li>
+	  	<a class="center-align" href="#!/choose">Choose Child</a>
+	  </li>
+	  <li>
+	  	<a class="center-align" href="#!">Logout</a>
+	  </li>
+	</ul>	
+</div>
+<!-- <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a> -->
