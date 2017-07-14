@@ -1,0 +1,371 @@
+<div class="pushMeOver">
+  <header>
+    <div class="topLine"></div>
+    <div ng-include="'partials/navbar.html'"></div>
+  </header>
+  <!-- Adding stuff buttons and general trial information -->
+  <div class="container">
+    <div class="row"></div>
+  	<div class="row currentRxn">
+      <div class="col m4 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTrialEventModal' modal>Add Trial Meal</a>
+      </div>
+      <div class="col m4 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addRxnModal' modal>Add Reaction</a>
+      </div>
+      <div class="col m4 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='endTrialModal' modal>End Trial</a>
+      </div>
+    </div>
+
+  	<!-- Start/end date -->
+    <div class="row">
+      <div class="col m12 center-align">
+        <h2>{{currentTrial.food}}</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col m6 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addSafeModal' modal>Make {{currentTrial.food}} a Safe</a>
+      </div>
+      <div class="col m6 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addTriggerModal' modal>Make {{currentTrial.food}} a Trigger</a>
+      </div>
+    </div>
+
+    <!-- Trigger/Safe Added note -->
+
+    <div ng-show="safeAdded">
+      <div class="row">
+        <div class="col m12">
+          {{safe.food}} has been added to {{currentChild}}'s safe list.
+        </div>
+      </div>
+    </div>
+
+    <div ng-show="triggerAdded">
+      <div class="row">
+        <div class="col m12">
+          {{trigger.food}} has been added to {{currentChild}}'s trigger list.
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+    	<div class="col m12 center-align">
+    		<span ng-show="!currentTrial.end_date">Trial began on: </span>{{currentTrial.start_date}} <span ng-show="currentTrial.end_date">- 
+    		{{currentTrial.end_date}}</span>
+    	</div>
+    </div>
+
+
+    <!-- Rxn List, including modal triggers for edit, delete, and detail -->
+  	<div ng-show="isRxn">
+  		<div class="row">
+  			<div class="col m12">
+  				Associated Reactions:
+      		<span ng-repeat="item in rxnFood">
+      	    <span><a href="#!/rxnDetail/{{item.id}}">{{item.food_type}} Reaction</a></span>
+      	  </span>
+
+        </div>
+      </div>
+  	</div>
+
+  	<!-- Trial Event List -->
+
+  	<div ng-repeat="item in trialEvents" class="row event">
+    <div class="row"></div>
+  		<div class="col m4">
+  			<div class="row">
+  				<div class="col m12">
+  					<h5>{{item.date}}</h5>
+  				</div>
+  			</div>
+  			<!-- Fixed Action Button -->
+        <div class="row">
+          <div class="col m12">
+            <div style="position: relative;">
+              <div class="fixed-action-btn horizontal"  style="position: static">
+                <a class="btn-floating btn-large triggerBtn" style="position: absolute; right: 10px; background-color: #F8FF91;">
+                  <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+                </a>
+                <ul style="position: absolute; right: 60px;">
+                  <li><a class="btn-floating white" data-target='deleteTrialEventModal' ng-click="getTrialEvent(item.id)" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+                  <li><a class="btn-floating white" data-target='editTrialEventModal' ng-click="getTrialEvent(item.id)" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+  		</div>
+  		<div class="col m8">
+  			<div class="row">
+  				<div class="col m3">
+  					{{item.time}}
+  				</div>
+  				<div class="col m9">
+  					{{item.quantity}} {{item.food_type}}
+  				</div>
+  			</div>
+  			<div class="row">
+  				<div class="col m12">
+  					Comments:<br>
+  					{{item.description}}
+  				</div>
+  			</div>
+  		</div>
+    </div>
+
+  </div>
+
+  <!-- Add Trial Event Modal -->
+  <div id="addTrialEventModal" class="modal tallModal">
+  	<div class="modal-content">
+  		<div class="row">
+  			<div class="rxnDetail">
+  				<div class="row">
+  					<div class="col m6">
+  						<label for="inputCreated">Date</label>
+  						<input input-date
+  					    type="text"
+  					    name="created"
+  					    id="inputCreated"
+  					    ng-model="trial_event.date"/>
+  					</div>
+  					<div class="col m6">
+  						<label for="input_starttime">Time</label>
+  						<input id="input_starttime" input-clock data-twelvehour="false" type="text" ng-model="trial_event.time">
+  					</div>
+  				</div>
+  				<div class="row">
+  					<div input-field class="col m6">
+  				    <input type="text" ng-model="trial_event.food_type" placeholder="Almond Milk">
+  				    <label>Food Type</label>
+  					</div>
+  					<div input-field class="col m6">
+  				    <input type="text" ng-model="trial_event.quantity" placeholder="1/4 Cup">
+  				    <label>Food Type</label>
+  					</div>
+  				</div>
+  				<div class="row">
+  		      <div input-field class="col m12">
+  				    <textarea ng-model="trial_event.description" class="materialize-textarea"></textarea>
+  				    <label>Comments</label>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  	</div>
+  	<div class="modal-footer">
+    <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addTrialEvent()">Add Trial Meal</a>
+  	</div>
+  </div>
+
+  <!-- Edit Trial Event Modal -->
+  <div id="editTrialEventModal" class="modal tallModal">
+  	<div class="modal-content">
+  		<div class="row">
+  			<div class="rxnDetail">
+  				<div class="row">
+  					<div class="col m6">
+  						<label for="inputCreated">Date</label>
+  						<input input-date
+  					    type="text"
+  					    name="created"
+  					    id="inputCreated"
+  					    ng-model="currentEvent.date"/>
+  					</div>
+  					<div class="col m6">
+  						<label for="input_starttime">Time</label>
+  						<input id="input_starttime" input-clock data-twelvehour="false" type="text" ng-model="currentEvent.time">
+  					</div>
+  				</div>
+  				<div class="row">
+  					<div input-field class="col m6">
+  				    <input type="text" ng-model="currentEvent.food_type" placeholder="Almond Milk">
+  				    <label>Food Type</label>
+  					</div>
+  					<div input-field class="col m6">
+  				    <input type="text" ng-model="currentEvent.quantity" placeholder="1/4 Cup">
+  				    <label>Food Type</label>
+  					</div>
+  				</div>
+  				<div class="row">
+  		      <div input-field class="col m12">
+  				    <textarea ng-model="currentEvent.description" class="materialize-textarea"></textarea>
+  				    <label>Comments</label>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
+  	</div>
+  	<div class="modal-footer">
+    <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editTrialEvent(currentEvent.id, currentEvent)">Edit Trial Meal</a>
+  	</div>
+  </div>
+
+  <!-- Add Rxn Modal -->
+  <div id="addRxnModal" class="modal tallModal">
+    <div class="modal-content">
+      <h4>Add Reaction</h4>
+      <div class="row">
+      	<div class="col m12">
+  	      <h5>Trigger Food: {{currentTrial.food}}</h5>
+  	    </div>
+      </div>
+      <div class="row">
+      	<div class="col s12">
+  	      <label for="inputCreated">Start date</label>
+  				<input input-date
+  			    type="text"
+  			    name="created"
+  			    id="inputCreated"
+  			    ng-model="rxn.start_date"/>
+  			</div>
+      </div>
+      <div class="row">
+        <div input-field>
+          <select class="" ng-model="rxn.ingestion" material-select watch>
+            <option value="Direct Ingestion">Direct Ingestion</option>
+            <option value="Cross Contamination">Cross Contamination</option>
+            <option value="Breastmilk">Breastmilk</option>
+            <option value="ng-tube">ng-tube</option>
+            <option value="g-tube">g-tube</option>
+          </select>
+          <label>Ingestion</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="rxn.food_type" placeholder="Coconut Milk">
+          <label>Type of Food</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addRxn()">Add Reaction</a>
+    </div>
+  </div>
+
+  <!-- End Trial Modal -->
+  <div id="endTrialModal" class="modal tallModal">
+    <div class="modal-content">
+      <div class="row">
+        <div input-field class="col s12">
+          <p>What day did the trial end?</p>
+        </div>
+      </div>
+      <div class="row">
+      	<div class="col s12">
+  	      <label for="inputCreated">End Date</label>
+  				<input input-date
+  			    type="text"
+  			    name="created"
+  			    id="inputCreated"
+  			    ng-model="currentTrial.end_date"/>
+  			</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="endTrial()">End Trial</a>
+    </div>
+  </div>
+
+  <!-- Delete Trial Event Modal -->
+  <div id="deleteTrialEventModal" class="modal">
+    <div class="modal-content">
+      <div class="row">
+        <div input-field class="col s12">
+          <p>Are you sure you want to delete this event?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteTrialEvent(currentEvent.id)">Delete Event</a>
+    </div>
+  </div>
+
+  <!-- Add Safe Modal -->
+  <div id="addSafeModal" class="modal tallModal">
+    <div class="modal-content">
+      <h4>Add Safe</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="safe.food" placeholder="milk">
+          <label>Food</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field>
+          <select class="" ng-model="safe.nutrients" material-select multiple watch>
+            <option value="Milk">Milk</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Protein">Protein</option>
+            <option value="Fruit">Fruit</option>
+            <option value="Vegetable">Vegetable</option>
+            <option value="Grain">Grain</option>
+            <option value="Oil">Oil</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addSafe()">Add Safe</a>
+    </div>
+  </div>
+
+  <!-- Add Trigger Modal -->
+  <div id="addTriggerModal" class="modal tallModal">
+    <div class="modal-content">
+      <h4>Add Trigger</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="trigger.food" placeholder="Milk">
+          <label>Food</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12">
+          <select class="" ng-model="trigger.severity" material-select watch>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <label>Severity</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12">
+          <select class="" ng-model="trigger.chronic" material-select multiple watch>
+            <option value="Vomiting">Vomiting</option>
+            <option value="Diarrhea">Diarrhea</option>
+            <option value="Lethargy">Lethargy</option>
+            <option value="Pallor">Pallor</option>
+            <option value="Abdominal Distension">Abdominal Distension</option>
+          </select>
+          <label>Chronic Symptoms</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12">
+          <select class="" ng-model="trigger.acute" material-select multiple watch>
+            <option value="Vomiting">Vomiting</option>
+            <option value="Diarrhea">Diarrhea</option>
+            <option value="Lethargy">Lethargy</option>
+            <option value="Pallor">Pallor</option>
+            <option value="Abdominal Distension">Abdominal Distension</option>
+            <option value="Low Blood Pressure">Low Blood Pressure</option>
+            <option value="Low Body Temperature">Low Body Temperature</option>
+            <option value="Shock">Shock</option>
+          </select>
+          <label>Acute Symptoms</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/trialDetail/{{trialId}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addTrigger()">Add Trigger</a>
+    </div>
+  </div>
+</div>

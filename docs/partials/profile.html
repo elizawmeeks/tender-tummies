@@ -1,0 +1,109 @@
+<div class="pushMeOver">
+	<header>
+	  <div class="topLine"></div>
+	  <div ng-include="'partials/navbar.html'"></div>
+	</header>
+	<!-- Profile -->
+	<div class="container profileContainer">
+		<div class="row" style="height:75px;"></div>
+		<div class="row">
+			<div class="col m3 offset-m1 center-align">
+				<!-- Fixed Action Button -->
+	      <div style="position: relative;">
+	        <div class="fixed-action-btn horizontal"  style="position: static">
+	          <a class="btn-floating white btn-large triggerBtn" style="position: absolute; right: 10px; top: 20px; background-color: #F8FF91;">
+	            <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+	          </a>
+	          <ul style="position: absolute; right: 60px; top: 15px;">
+	            <li><a class="btn-floating white" data-target='deleteChildModal' modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+	            <li><a class="btn-floating white" data-target='editChildModal' modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+	          </ul>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="col m8">
+				<h2 class="specialFont">{{child.name}}</h2>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col m12 center-align">
+				<h2 class="specialFont">{{child.age}} year old {{child.gender}}</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col m12 center-align">
+				<h2 class="specialFont">{{child.wtNumber}} {{child.wtUnit}}</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col m6 center-align">
+				<h4>{{numTriggers}} Trigger Foods</h4>
+			</div>
+			<div class="col m6 center-align">
+				<h4>{{numSafes}} Safe Foods</h4>
+			</div>
+		</div>
+	</div>
+	<!-- edit Child Modal -->
+	<div id="editChildModal" class="modal">
+	  <div class="modal-content">
+	    <h4>Edit Child</h4>
+	    <div class="row">
+	      <div input-field class="col s12">
+	        <input type="text" ng-model="child.name">
+	        <label>Name</label>
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div input-field class="col s12">
+	        <input type="text" ng-model="child.age">
+	        <label>Age</label>
+	      </div>
+	    </div>
+	    <div class="row">
+	      <div input-field class="col s6">
+	        <input type="text" ng-model="child.wtNumber">
+	        <label>Weight</label>
+	      </div>
+	      <div input-field class="col s6">
+			    <select class="" ng-model="child.wtUnit" material-select watch>
+			      <option value="" disabled>Choose your option</option>
+			      <option value="lbs">lbs</option>
+			      <option value="kg">kg</option>
+			    </select>
+				</div>
+	    </div>
+		  <div class="row">
+			  <div input-field class="col s12">
+			    <select class="" ng-model="child.gender" material-select watch>
+			      <option value="" disabled>Choose your option</option>
+			      <option value="boy">Boy</option>
+			      <option value="girl">Girl</option>
+			      <option value="">Other</option>
+			      <option value="">Prefer Not to Answer</option>
+			    </select>
+			    <label>Gender</label>
+				</div>
+			</div>
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#!/profile/{{child.id}}" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editChild()">Edit Child</a>
+	  </div>
+	</div>
+
+
+	<!-- Delete Child Modal -->
+	<div id="deleteChildModal" class="modal">
+	  <div class="modal-content">
+	    <div class="row">
+	      <div input-field class="col s12">
+	        <p>Are you sure you want to delete {{child.name}}'s profile?</p>
+	      </div>
+			</div>
+	  </div>
+	  <div class="modal-footer">
+	    <a href="#!/choose" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteChild()">Delete {{child.name}}'s Profile</a>
+	  </div>
+	</div>
+</div>

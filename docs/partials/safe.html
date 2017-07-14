@@ -1,0 +1,126 @@
+<div class="pushMeOver">
+  <header>
+    <div class="topLine"></div>
+    <div ng-include="'partials/navbar.html'"></div>
+  </header>
+  <!-- Add Safe Modal Trigger -->
+  <div class="container">
+    <div class="row"></div>
+    <div class="row">
+      <div class="col m6 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' data-target='addSafeModal' modal>Add Safe</a>
+      </div>
+      <div class="col m6 center-align">
+        <a class='waves-effect waves-yellow lighten-4 btn-flat textColor' ng-click="downloadPDF()">Download PDF</a>
+      </div>
+    <!--     <div class="col m8">
+        <div input-field>
+          <select class="" ng-model="selectedNutrient" material-select watch>
+            <option value="all">All</option>
+            <option ng-repeat="value in reduced" value={{value}}>{{value}}</option>
+          </select>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- Safes list -->
+
+    <div ng-repeat="item in safeList | orderBy: 'food'">
+      <div class="row triggerRow">
+        <div class="col m2 offset-m3">
+          <div style="position: relative; height: 70px;">
+            <div class="fixed-action-btn horizontal"  style="position: static">
+              <a class="btn-floating btn-large triggerBtn" style="position: absolute; left: 10px; top: 5px; background-color: #F8FF91;">
+                <strong style="color: #003366;"><i class="material-icons" style="color: #003366;">add</i></strong>
+              </a>
+              <ul style="position: absolute; right: 70px; top: 30px;">
+                <li><a class="btn-floating white" data-target='deleteSafeModal' ng-click="getSafe( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">delete</i></a></li>
+                <li><a class="btn-floating white" data-target='editSafeModal' ng-click="getSafe( item.id )" modal style="background-color: #F8FF91;"><i class="material-icons" style="color: #529e99;">mode_edit</i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col m7">
+          <h4>{{item.food}}</h4></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- Add Safe Modal -->
+  <div id="addSafeModal" class="modal">
+    <div class="modal-content">
+      <h4>Add Safe</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="safe.food" placeholder="milk">
+          <label>Food</label>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div input-field>
+          <select class="" ng-model="safe.nutrients" material-select multiple watch>
+            <option value="Milk">Milk</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Protein">Protein</option>
+            <option value="Fruit">Fruit</option>
+            <option value="Vegetable">Vegetable</option>
+            <option value="Grain">Grain</option>
+            <option value="Oil">Oil</option>
+          </select>
+        </div>
+      </div> -->
+    </div>
+    <div class="modal-footer">
+      <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addSafe()">Add Safe</a>
+    </div>
+  </div>
+
+
+  <!-- Edit Safe Modal -->
+  <div id="editSafeModal" class="modal">
+    <div class="modal-content">
+      <h4>Edit Safe</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="currentSafe.food">
+          <label>Food</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field>
+          <select class="" ng-model="currentSafe.nutrients" material-select multiple watch>
+            <option value="Milk">Milk</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Protein">Protein</option>
+            <option value="Fruit">Fruit</option>
+            <option value="Vegetable">Vegetable</option>
+            <option value="Grain">Grain</option>
+            <option value="Oil">Oil</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="editSafe(currentSafe.id, currentSafe)">Edit Safe</a>
+    </div>
+  </div>
+
+  <!-- Delete Safe Modal -->
+  <div id="deleteSafeModal" class="modal">
+    <div class="modal-content">
+      <div class="row">
+        <div input-field class="col s12">
+          <p>Are you sure you want to delete {{currentSafe.food}}?</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/safe" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="deleteSafe(currentSafe.id)">Delete {{currentSafe.food}}</a>
+    </div>
+  </div>
+</div>

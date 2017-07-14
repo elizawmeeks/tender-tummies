@@ -1,0 +1,81 @@
+<div class="pushMeOver">
+  <header>
+    <div class="topLine"></div>
+    <div ng-include="'partials/navbar.html'"></div>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="col m12 center-align">
+        <h5 class="chooseChild">Choose Child's Profile</h5>
+      </div>
+    </div>
+    <div class="row" ng-repeat="item in children">
+      <div class="col m12 center-align">
+        <a ng-href="#!/profile/{{item.id}}">
+          <h2 class="specialFont">{{item.name}}</h2>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Child Modal Trigger -->
+  <div class="row">
+    <div class="col m4 offset-m4 center-align">
+      <a class='waves-effect waves-yellow lighten-4 btn-flat' data-target='addChildModal' modal>Add Child</a>
+    </div>
+  </div>
+
+
+  <!-- Add Child Modal -->
+  <div id="addChildModal" class="modal">
+    <div class="modal-content">
+      <h4>Add Child</h4>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="newChild.name">
+          <label>Name</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12">
+          <input type="text" ng-model="newChild.age">
+          <label>Age</label>
+        </div>
+      </div>
+      <div class="row">
+        <div input-field class="col s6">
+          <input type="text" ng-model="newChild.wtNumber">
+          <label>Weight</label>
+        </div>
+        <div input-field class="col s6">
+  		    <select class="" ng-model="newChild.wtUnit" material-select watch>
+  		      <option value="" disabled>Choose your option</option>
+  		      <option value="lbs">lbs</option>
+  		      <option value="kg">kg</option>
+  		    </select>
+  			</div>
+      </div>
+      <div class="row">
+        <div input-field class="col s12 data-list-input">
+          <select class="data-list-input" ng-model="newChild.gender" material-select watch>
+            <option value="" disabled>Choose your option</option>
+            <!-- <option value="other">Other, please specify</option> -->
+            <option value="boy">Boy</option>
+            <option value="girl">Girl</option>
+            <option value="">Other</option>
+            <option value="">Prefer Not to Answer</option>
+          </select>
+          <label>Gender</label>
+          <!-- When I get to MVP, adding genders -->
+          <!-- <div id="data-list-input" class="col s10" input-field>
+            <input class="data-list-input" type="text" value="">
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!/choose" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="addChild()">Add Child</a>
+    </div>
+  </div>
+</div>
