@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css?family=Abel|Comfortaa:300");
+.side-nav {
+  background-color: transparent; }
+  .side-nav h1 {
+    margin: 0 0 10px; }
+  .side-nav li a {
+    color: #003366; }
+
+.navLine {
+  background-color: #F8FF91;
+  height: 25px;
+  width: 300px; }
+
+.heartLogo {
+  height: 100px;
+  margin: 50px 0 0 90px; }
+
+.titleInNav {
+  margin-top: 0; }
+
+.modal-content .row {
+  margin: 0; }
+
+div.data-list-input {
+  position: relative; }
+
+select.data-list-input {
+  position: absolute;
+  top: 5px;
+  left: 0px; }
+
+#data-list-input {
+  position: absolute;
+  top: 0px;
+  left: 0px; }
+
+input.data-list-input {
+  border-bottom: none; }
+
+input.data-list-input[type=text]:focus:not([readonly]) {
+  border-bottom: none;
+  box-shadow: 0 0 0; }
+
+.profileView .dropdown-content {
+  background-color: #b2e8e3; }
+
+.profileView .dropdown-content li > a {
+  color: #003366; }
+
+.event {
+  background-color: #b2e8e3;
+  border-radius: 15px; }
+
+.currentRxn {
+  margin: 0; }
+
+.chooseChild {
+  margin-top: 100px; }
+
+body {
+  background-color: #91d8d3;
+  background: linear-gradient(to bottom right, #b2e8e3, #91d8d3, #529e99);
+  min-height: 100vh;
+  color: #003366;
+  font-family: "Abel", sans-serif;
+  font-size: 1.5em; }
+
+body a {
+  color: #003366;
+  cursor: pointer; }
+
+body a:hover {
+  color: #529e99; }
+
+.footer-copyright {
+  position: fixed;
+  bottom: 0;
+  right: 5px; }
+
+.specialFont {
+  font-family: 'Comfortaa', sans-serif; }
+
+.pushMeOver {
+  padding-left: 300px; }
+
+.topLine {
+  background-color: #F8FF91;
+  height: 25px;
+  width: calc(100vw - 300px); }
+
+.textColor {
+  color: #003366; }
+
+.tallModal {
+  min-height: 80%; }
+
+.splashRow {
+  height: 300px; }
+
+.splashLogo {
+  max-height: 300px; }
+
+.splashH1 {
+  font-size: 3.25em; }
+
+.splash {
+  margin-top: calc(50vh - 200px); }
+
+.moveModal {
+  height: 35px; }
+
+.picker__frame {
+  margin-top: -50px; }
