@@ -1,5 +1,7 @@
 # Tender Tummies
 
+[Tender Tummies has deployed!](https://elizawmeeks.github.io/tender-tummies/#!/splash)
+
 An FPIES (Food Protein Induced Enterocolitis Syndrome) tracking app. FPIES is a rare food allergy that requires a lot of tracking of information, symptoms, trials and reactions. Tender Tummies attempts to facilitate parents managing a complex, rare disease like FPIES to keep all of their information in one place and make it easy to share that information with caregivers and family members.
 
 ## Getting Started
